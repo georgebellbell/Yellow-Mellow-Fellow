@@ -9,19 +9,31 @@ public class Fellow : MonoBehaviour
 
     int score = 0;
     int pelletsEaten = 0;
+
     [SerializeField]
     int pointsPerPellet = 100;
+
+    [SerializeField]
+    int pointsPerPowerup = 250;
+
+    [SerializeField]
+    int pointsPerGhost = 500;
 
     [SerializeField]
     float powerupDuration = 10.0f;
 
     float powerupTime = 0.0f;
 
+    int lives = 3;
+
+    Vector3 spawnLocation;
+
 
 
     // Start is called before the first frame update
     void Start()
     {
+        spawnLocation = gameObject.transform.position;
         
     }
 
@@ -96,7 +108,9 @@ public class Fellow : MonoBehaviour
 
         if (other.gameObject.CompareTag("Powerup"))
         {
-            powerupTime = powerupDuration;
+            pelletsEaten++;
+            score += pointsPerPowerup;
+            powerupTime += powerupDuration;
         }
 
         if (other.gameObject.CompareTag("LeftTeleporter"))
@@ -125,8 +139,21 @@ public class Fellow : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Ghost"))
         {
-            Debug.Log("You Died with a score of " + score);
-            gameObject.SetActive(false);
+            if(PowerupActive())
+            {
+                score += pointsPerGhost;
+            }
+            else
+            {
+                lives = lives - 1;
+                gameObject.transform.position = spawnLocation;
+                if(lives == 0)
+                {
+                    Debug.Log("You Died with a score of " + score);
+                    gameObject.SetActive(false);
+                }
+            }
+            
         }
     }
     public int PelletsEaten()
@@ -134,6 +161,15 @@ public class Fellow : MonoBehaviour
         return pelletsEaten;
     }
 
+    public int getScore()
+    {
+        return score;
+    }
+
+    public int getLives()
+    {
+        return lives;
+    }
     
 
 }

@@ -8,13 +8,22 @@ public class Ghost : MonoBehaviour
     NavMeshAgent agent;
     // Start is called before the first frame update
 
+    [SerializeField]
+    Fellow playerObject;
 
     [SerializeField]
     Material scaredMaterial;
+
     Material normalMaterial;
+
+    [SerializeField]
+    GameObject GhostHouse;
+
+    Vector3 ghostSpawn;
 
     void Start()
     {
+        ghostSpawn = GhostHouse.transform.position;
         agent = GetComponent<NavMeshAgent>();
         agent.destination = PickRandomPosition();
         normalMaterial = GetComponent<Renderer>().material;
@@ -49,23 +58,23 @@ public class Ghost : MonoBehaviour
                 hiding = false;
                 GetComponent<Renderer>().material = normalMaterial;
             }
-           
-        }
-
-
-        if (CanSeePlayer())
-        {
-            Debug.Log("I can see you!");
-            agent.destination = player.transform.position;
-        }
-        else
-        {
-            if (agent.remainingDistance < 0.5f)
+            if (CanSeePlayer())
             {
-                agent.destination = PickRandomPosition();
+                Debug.Log("I can see you!");
+                agent.destination = player.transform.position;
             }
+            else
+            {
+                if (agent.remainingDistance < 0.5f)
+                {
+                    agent.destination = PickRandomPosition();
+                }
 
+            }
         }
+
+
+       
 
     }
 
@@ -142,7 +151,13 @@ public class Ghost : MonoBehaviour
 
     }
 
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Fellow"))
+        {   
+            gameObject.transform.position = ghostSpawn;                              
+        }
+    }
 
-
-
+   
 }
