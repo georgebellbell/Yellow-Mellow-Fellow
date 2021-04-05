@@ -110,7 +110,7 @@ public class Fellow : MonoBehaviour
         {
             pelletsEaten++;
             score += pointsPerPowerup;
-            powerupTime += powerupDuration;
+            powerupTime = powerupDuration;
         }
 
         if (other.gameObject.CompareTag("LeftTeleporter"))

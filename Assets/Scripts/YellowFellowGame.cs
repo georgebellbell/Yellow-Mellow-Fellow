@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class YellowFellowGame : MonoBehaviour
 {
@@ -11,40 +13,35 @@ public class YellowFellowGame : MonoBehaviour
     GameObject[] pellets;
 
     [SerializeField]
-    GameObject highScoreUI;
-
-    [SerializeField]
-    GameObject mainMenuUI;
-
-    [SerializeField]
     GameObject gameUI;
+
+    [SerializeField]
+    GameObject Score;
+
+    Text scoreText;
+
+    [SerializeField]
+    GameObject Lives;
+
+    Text livesText;
+
+    [SerializeField]
+    GameObject Level;
+
+    Text levelText;
 
     [SerializeField]
     GameObject winUI;
 
-
-    enum GameMode
-    {
-        InGame,
-        MainMenu,
-        HighScores
-    }
-
-    GameMode gameMode = GameMode.MainMenu;
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        pellets = FindGameObjectsWithTags(new string[] { "Pellet", "Powerup" });
-        StartMainMenu(); 
-    }
+    [SerializeField]
+    GameObject loseUI;
 
     //function got from this link: https://answers.unity.com/questions/973677/add-gameobjects-with-different-tags-to-one-array.html on 26/03/2021
     GameObject[] FindGameObjectsWithTags(string[] tags)
     {
         var all = new List<GameObject>();
 
-        foreach(string tag in tags)
+        foreach (string tag in tags)
         {
             var temp = GameObject.FindGameObjectsWithTag(tag).ToList();
             all = all.Concat(temp).ToList();
@@ -53,68 +50,89 @@ public class YellowFellowGame : MonoBehaviour
         return all.ToArray();
     }
 
+    enum InGameMode
+    {
+        InGame,
+        Paused,
+        Win,
+        Lose
+    }
+
+    InGameMode gameMode = InGameMode.InGame;
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        scoreText = Score.GetComponent<Text>();
+        livesText = Lives.GetComponent<Text>();
+        levelText = Level.GetComponent<Text>();
+        pellets = FindGameObjectsWithTags(new string[] { "Pellet", "Powerup" });
+        StartGame();
+    }
+
+    
+    void StartGame()
+    {
+        gameMode = InGameMode.InGame;
+        gameUI.gameObject.SetActive(true);
+        winUI.gameObject.SetActive(false);
+        loseUI.gameObject.SetActive(false);
+    }
+
     // Update is called once per frame
     void Update()
     {
-        if(playerObject.PelletsEaten() == pellets.Length)
+        if (playerObject.PelletsEaten() == pellets.Length)
         {
-            Debug.Log("Level Completed!");
+            StartWin();
         }
-        switch(gameMode)
+        else if (playerObject.getLives() == 0)
         {
-            case GameMode.MainMenu:     UpdateMainMenu(); break;
-            case GameMode.HighScores:   UpdateHighScores(); break;
-            case GameMode.InGame:       UpdateMainGame(); break;
+            StartLose();
         }
-    }
+        switch (gameMode)
+        {
 
-    void UpdateMainMenu()
-    {
-        if(Input.GetKeyDown(KeyCode.Space))
-        {
-            StartGame();
-        }
-        else if (Input.GetKeyDown(KeyCode.Return))
-        {
-            StartHighScores();
-        }
-    }
+            case InGameMode.InGame:       UpdateMainGame(); break;
+            case InGameMode.Win:          UpdateEnd(); break;
+            case InGameMode.Lose:         UpdateEnd(); break;
 
-    void UpdateHighScores()
-    {
-        if (Input.GetKeyDown(KeyCode.Return))
-        {
-            StartMainMenu();
         }
     }
+   
 
     void UpdateMainGame()
     {
-       // playerObject
+        
+        scoreText.text = "SCORE: " + playerObject.getScore();
+        livesText.text = "LIVES: " + playerObject.getLives();
+        //levelText.text = "LEVEL: 1";
     }
 
-    void StartMainMenu()
+    void UpdateEnd()
     {
-        gameMode                        = GameMode.MainMenu;
-        mainMenuUI.gameObject.SetActive(true);
-        highScoreUI.gameObject.SetActive(false);
-        gameUI.gameObject.SetActive(false);
+        if (Input.GetKeyDown(KeyCode.Backspace))
+        {
+            SceneManager.LoadScene("MainMenu");
+        }
+        else if (Input.GetKeyDown(KeyCode.Space))
+        {
+            SceneManager.LoadScene("Level1");
+        }
     }
 
-
-    void StartHighScores()
+    void StartWin()
     {
-        gameMode                = GameMode.HighScores;
-        mainMenuUI.gameObject.SetActive(false);
-        highScoreUI.gameObject.SetActive(true);
-        gameUI.gameObject.SetActive(false);
+        gameMode = InGameMode.Win;
+        winUI.gameObject.SetActive(true);
+        
     }
 
-    void StartGame()
+    void StartLose()
     {
-        gameMode                = GameMode.InGame;
-        mainMenuUI.gameObject.SetActive(false);
-        highScoreUI.gameObject.SetActive(false);
-        gameUI.gameObject.SetActive(true);
+        gameMode = InGameMode.Lose;
+        loseUI.gameObject.SetActive(true);
+       // winUI.gameObject.SetActive(true);
     }
+
 }

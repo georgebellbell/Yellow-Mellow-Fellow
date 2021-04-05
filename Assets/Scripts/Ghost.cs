@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.AI;
 
 public class Ghost : MonoBehaviour
@@ -14,16 +12,23 @@ public class Ghost : MonoBehaviour
     [SerializeField]
     Material scaredMaterial;
 
+    [SerializeField]
+    Material deadMaterial;
+
+
     Material normalMaterial;
 
     [SerializeField]
     GameObject GhostHouse;
 
+    Vector3 ghostHouseVector;
+
     Vector3 ghostSpawn;
 
     void Start()
     {
-        ghostSpawn = GhostHouse.transform.position;
+        ghostSpawn = gameObject.transform.position;
+        ghostHouseVector = GhostHouse.transform.position;
         agent = GetComponent<NavMeshAgent>();
         agent.destination = PickRandomPosition();
         normalMaterial = GetComponent<Renderer>().material;
@@ -33,50 +38,64 @@ public class Ghost : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (player.PowerupActive())
+        if (gameObject.layer == LayerMask.NameToLayer("DeadGhost"))
         {
-            Debug.Log("Hiding from Player!");
-            if(!hiding || agent.remainingDistance < 0.5f)
-            {
-                hiding = true;
-                agent.destination = PickHidingPlace();
-                GetComponent<Renderer>().material = scaredMaterial;
-            }
-            
+            agent.destination = ghostHouseVector;
+            GetComponent<Renderer>().material = deadMaterial;
+            Debug.Log("I am dead!");
         }
         else
         {
-           // Debug.Log("Chasing Player!");
-            if (hiding)
+            if (player.PowerupActive())
             {
-                GetComponent<Renderer>().material = normalMaterial;
-            }
-
-            if (agent.remainingDistance < 0.5f)
-            {
-                agent.destination = PickRandomPosition();
-                hiding = false;
-                GetComponent<Renderer>().material = normalMaterial;
-            }
-            if (CanSeePlayer())
-            {
-                Debug.Log("I can see you!");
-                agent.destination = player.transform.position;
+                UpdateHide();
             }
             else
             {
-                if (agent.remainingDistance < 0.5f)
-                {
-                    agent.destination = PickRandomPosition();
-                }
-
+                UpdateChase();
             }
         }
-
-
-       
-
+        
     }
+
+    void UpdateChase()
+    {
+        if (hiding)
+        {
+            GetComponent<Renderer>().material = normalMaterial;
+        }
+
+        if (agent.remainingDistance < 0.5f)
+        {
+            agent.destination = PickRandomPosition();
+            hiding = false;
+            GetComponent<Renderer>().material = normalMaterial;
+        }
+        if (CanSeePlayer())
+        {
+            Debug.Log("I can see you!");
+            agent.destination = player.transform.position;
+        }
+        else
+        {
+            if (agent.remainingDistance < 0.5f)
+            {
+                agent.destination = PickRandomPosition();
+            }
+
+        }
+    }
+
+    void UpdateHide()
+    {
+        if (!hiding || agent.remainingDistance < 0.5f)
+        {
+            hiding = true;
+            agent.destination = PickHidingPlace();
+            GetComponent<Renderer>().material = scaredMaterial;
+        }
+    }
+
 
     Vector3 PickRandomPosition()
     {
@@ -148,14 +167,26 @@ public class Ghost : MonoBehaviour
             pos.x = pos.x + 0.5f;
             transform.position = pos;
         }
+        if(other.gameObject.CompareTag("GhostHouse")&& gameObject.layer == LayerMask.NameToLayer("DeadGhost"))
+        {
+            gameObject.layer = LayerMask.NameToLayer("Ghost");
+        }
 
     }
 
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("Fellow"))
-        {   
-            gameObject.transform.position = ghostSpawn;                              
+        {
+            if (player.PowerupActive())
+            {
+                gameObject.layer = LayerMask.NameToLayer("DeadGhost");
+            }
+            else
+            {
+                gameObject.transform.position = ghostSpawn;
+            }
+                           
         }
     }
 

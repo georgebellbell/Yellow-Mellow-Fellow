@@ -11,6 +11,7 @@ TagManager:
   - Powerup
   - LeftTeleporter
   - RightTeleporter
+  - GhostHouse
   layers:
   - Default
   - TransparentFX
@@ -25,7 +26,7 @@ TagManager:
   - Ghost
   - GhostHouse
   - Floor
-  - 
+  - DeadGhost
   - 
   - 
   - 
