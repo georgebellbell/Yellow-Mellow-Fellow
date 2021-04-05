@@ -29,7 +29,6 @@ public class Fellow : MonoBehaviour
     Vector3 spawnLocation;
 
 
-
     // Start is called before the first frame update
     void Start()
     {
@@ -89,16 +88,10 @@ public class Fellow : MonoBehaviour
         b.velocity = velocity;
      }
 
-    [SerializeField]
-    BoxCollider LeftTeleporter;
-
-    [SerializeField]
-    BoxCollider RightTeleporter;
 
     private void OnTriggerEnter(Collider other)
     {
-        Vector3 pos = transform.position;
-
+       
         if (other.gameObject.CompareTag("Pellet"))
         {
             pelletsEaten++;
@@ -112,23 +105,6 @@ public class Fellow : MonoBehaviour
             score += pointsPerPowerup;
             powerupTime = powerupDuration;
         }
-
-        if (other.gameObject.CompareTag("LeftTeleporter"))
-        {
-            pos = RightTeleporter.ClosestPoint(pos);
-            Debug.Log("LeftTeleporter found");
-            pos.x = pos.x - 0.5f;
-            transform.position = pos;
-        }
-
-        if (other.gameObject.CompareTag("RightTeleporter"))
-        {
-            pos = LeftTeleporter.ClosestPoint(pos);
-            Debug.Log("RightTeleporter found");
-            pos.x = pos.x + 0.5f;
-            transform.position = pos;
-        }
-
     }
     public bool PowerupActive()
     {
@@ -149,7 +125,6 @@ public class Fellow : MonoBehaviour
                 gameObject.transform.position = spawnLocation;
                 if(lives == 0)
                 {
-                    Debug.Log("You Died with a score of " + score);
                     gameObject.SetActive(false);
                 }
             }

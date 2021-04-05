@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.AI;
 
+[System.Serializable]
 public class Ghost : MonoBehaviour
 {
     NavMeshAgent agent;
@@ -15,7 +16,6 @@ public class Ghost : MonoBehaviour
     [SerializeField]
     Material deadMaterial;
 
-
     Material normalMaterial;
 
     [SerializeField]
@@ -25,6 +25,8 @@ public class Ghost : MonoBehaviour
 
     Vector3 ghostSpawn;
 
+    bool alive = true;
+
     void Start()
     {
         ghostSpawn = gameObject.transform.position;
@@ -32,6 +34,7 @@ public class Ghost : MonoBehaviour
         agent = GetComponent<NavMeshAgent>();
         agent.destination = PickRandomPosition();
         normalMaterial = GetComponent<Renderer>().material;
+
     }
 
     bool hiding = false;
@@ -62,9 +65,10 @@ public class Ghost : MonoBehaviour
     {
         if (hiding)
         {
+            hiding = false;
             GetComponent<Renderer>().material = normalMaterial;
         }
-
+       
         if (agent.remainingDistance < 0.5f)
         {
             agent.destination = PickRandomPosition();
@@ -140,33 +144,8 @@ public class Ghost : MonoBehaviour
         return navHit.position;
     }
 
-
-    [SerializeField]
-    BoxCollider LeftTeleporter;
-
-    [SerializeField]
-    BoxCollider RightTeleporter;
-
     private void OnTriggerEnter(Collider other)
     {
-        Vector3 pos = transform.position;
-
-
-        if (other.gameObject.CompareTag("LeftTeleporter"))
-        {
-            pos = RightTeleporter.ClosestPoint(pos);
-            Debug.Log("LeftTeleporter found");
-            pos.x = pos.x - 0.5f;
-            transform.position = pos;
-        }
-
-        if (other.gameObject.CompareTag("RightTeleporter"))
-        {
-            pos = LeftTeleporter.center;
-            Debug.Log("RightTeleporter found");
-            pos.x = pos.x + 0.5f;
-            transform.position = pos;
-        }
         if(other.gameObject.CompareTag("GhostHouse")&& gameObject.layer == LayerMask.NameToLayer("DeadGhost"))
         {
             gameObject.layer = LayerMask.NameToLayer("Ghost");
