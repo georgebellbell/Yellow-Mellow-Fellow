@@ -12,21 +12,21 @@ public class Teleporters : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        Vector3 pos = transform.position;
+        Vector3 pos = gameObject.transform.position;
 
         if (other.gameObject.CompareTag("LeftTeleporter"))
         {
-            pos = RightTeleporter.ClosestPoint(pos);
+            pos = RightTeleporter.transform.position;
             Debug.Log("LeftTeleporter found");
-            pos.x = pos.x - 0.5f;
+            pos.x = pos.x - 1.5f;
             transform.position = pos;
         }
 
         if (other.gameObject.CompareTag("RightTeleporter"))
         {
-            pos = LeftTeleporter.ClosestPoint(pos);
+            pos = LeftTeleporter.transform.position;
             Debug.Log("RightTeleporter found");
-            pos.x = pos.x + 0.5f;
+            pos.x = pos.x + 1.5f;
             transform.position = pos;
         }
     }

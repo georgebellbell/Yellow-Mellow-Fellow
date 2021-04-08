@@ -27,6 +27,8 @@ public class Ghost : MonoBehaviour
 
     bool alive = true;
 
+    
+
     void Start()
     {
         ghostSpawn = gameObject.transform.position;
