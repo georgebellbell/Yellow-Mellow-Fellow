@@ -28,6 +28,8 @@ public class Fellow : MonoBehaviour
 
     Vector3 spawnLocation;
 
+    string playerDirection = "left";
+
 
     // Start is called before the first frame update
     void Start()
@@ -41,22 +43,27 @@ public class Fellow : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
         Vector3 pos = transform.position;
 
         if (Input.GetKey(KeyCode.A))
         {
+           
             pos.x -= speed;
         }
         if (Input.GetKey(KeyCode.D))
         {
+           
             pos.x += speed;
         }
         if (Input.GetKey(KeyCode.W))
         {
+            
             pos.z += speed;
         }
         if (Input.GetKey(KeyCode.S))
         {
+           
             pos.z -= speed;
         }
         transform.position = pos;
@@ -71,18 +78,22 @@ public class Fellow : MonoBehaviour
 
         if (Input.GetKey(KeyCode.A))
         {
+            playerDirection = "left";
             velocity.x = -speed;
         }
         if (Input.GetKey(KeyCode.D))
         {
+            playerDirection = "right";
             velocity.x = speed;
         }
         if (Input.GetKey(KeyCode.W))
         {
+            playerDirection = "up";
             velocity.z = speed;
         }
         if (Input.GetKey(KeyCode.S))
         {
+            playerDirection = "down";
             velocity.z = -speed;
         }
         b.velocity = velocity;
@@ -146,5 +157,9 @@ public class Fellow : MonoBehaviour
         return lives;
     }
     
+    public string getDirection()
+    {
+        return playerDirection;
+    }
 
 }

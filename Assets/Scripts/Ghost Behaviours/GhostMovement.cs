@@ -86,9 +86,18 @@ public class GhostMovement: MonoBehaviour
     //----------------------------------------------GHOST MOVEMENT-------------------------------------------------//
     void UpdatePatrol()
     {
-        Debug.Log("Patrolling!");
-        if (!agent.pathPending && agent.remainingDistance < 0.5f)
-            GotoNextPoint();
+        if (CanSeePlayer())
+        {
+            Debug.Log("I can see you!");
+            agent.destination = player.transform.position;
+        }
+        else
+        {
+            Debug.Log("Patrolling!");
+            if (!agent.pathPending && agent.remainingDistance < 0.5f)
+                GotoNextPoint();
+        }
+        
     }
     void UpdateHunt()
     {
@@ -96,11 +105,13 @@ public class GhostMovement: MonoBehaviour
         switch (ghostType)
         {
             case "ambusher":
-                Debug.Log(behaviour.ambusher());
                 if (!agent.pathPending && agent.remainingDistance < 0.5f)
-                    GotoNextPoint();
+                    agent.destination = behaviour.ambusher(player.transform.position, player.getDirection());
                 break;
-            case "stalker": Debug.Log(behaviour.stalker()); break;
+            case "stalker":
+                if (!agent.pathPending && agent.remainingDistance < 0.5f)
+                    agent.destination = behaviour.stalker(player.transform.position);
+                break;
             case "TBA": UpdateHunt(); break;
             case "TBA2": UpdateDead(); break;
 
@@ -163,11 +174,28 @@ public class GhostMovement: MonoBehaviour
         return navHit.position;
     }
 
+    bool CanSeePlayer()
+    {
+        Vector3 rayPos = transform.position;
+        Vector3 rayDir = (player.transform.position - rayPos).normalized;
+
+        RaycastHit info;
+        if (Physics.Raycast(rayPos, rayDir, out info))
+        {
+            if (info.transform.CompareTag("Fellow"))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
 
     //----------------------------------------------GHOST INTERACTION-------------------------------------------------//
 
 
-    
+
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("Fellow"))

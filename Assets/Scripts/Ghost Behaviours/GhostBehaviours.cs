@@ -4,24 +4,26 @@ using UnityEngine;
 
 public class GhostTypes
 {
-    // Start is called before the first frame update
-    void Start()
+
+    Vector3 target;
+    public Vector3 stalker(Vector3 playerPosition)
     {
-        
+        target = playerPosition;
+        return target;
     }
 
-    // Update is called once per frame
-    void Update()
+    public Vector3 ambusher(Vector3 playerPosition,string playerDirection)
     {
-        
-    }
-    public string stalker()
-    {
-        return "Stalker";
-    }
+        target = playerPosition;
 
-    public string ambusher()
-    {
-        return "Ambusher";
+        switch (playerDirection)
+        {
+            case "left": target.x = target.x - 1; break;
+            case "right": target.x = target.x + 1; break;
+            case "up": target.z = target.z + 1; break;
+            case "down": target.x = target.x + 1; break;
+        }
+
+        return target;
     }
 }
