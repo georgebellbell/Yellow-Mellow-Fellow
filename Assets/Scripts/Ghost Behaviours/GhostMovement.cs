@@ -112,8 +112,24 @@ public class GhostMovement: MonoBehaviour
                 if (!agent.pathPending && agent.remainingDistance < 0.5f)
                     agent.destination = behaviour.stalker(player.transform.position);
                 break;
-            case "TBA": UpdateHunt(); break;
-            case "TBA2": UpdateDead(); break;
+                //needs further look at
+            case "coward": 
+                //if more than 4 units away will move straight for player
+                if (Vector3.Distance(player.transform.position, transform.position) > 4.0f)
+                {
+                    agent.destination = behaviour.stalker(player.transform.position);
+                }
+                // but when it gets too close, will get scared and return to patrol route
+                else
+                {
+                    Debug.Log("WOAH TOO CLOSE RUN AWAY");
+                    GotoNextPoint();
+                }
+                break;
+            case "teamplayer":
+                if (!agent.pathPending && agent.remainingDistance < 0.5f)
+                    agent.destination = behaviour.teamplayer(player.transform.position, player.getDirection());
+                break;
 
         }
     }
