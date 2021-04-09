@@ -29,7 +29,7 @@ public class GhostTypes
     public Vector3 teamplayer(Vector3 playerPosition, string playerDirection)
     {
 
-        Vector3 stalkerLocation = GameObject.Find("GhostOne").transform.position;
+        Vector3 stalkerLocation = GameObject.Find("stalker").transform.position;
         target = stalkerLocation;
         switch (playerDirection)
         {

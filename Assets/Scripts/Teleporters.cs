@@ -1,33 +1,34 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class Teleporters : MonoBehaviour
 {
-    [SerializeField]
-    BoxCollider LeftTeleporter;
-
-    [SerializeField]
-    BoxCollider RightTeleporter;
-
+    public Transform otherTeleporter;
+    int offset;
     private void OnTriggerEnter(Collider other)
     {
-        Vector3 pos = gameObject.transform.position;
-
-        if (other.gameObject.CompareTag("LeftTeleporter"))
+        if (transform.position.x < otherTeleporter.position.x)
         {
-            pos = RightTeleporter.transform.position;
-            Debug.Log("LeftTeleporter found");
-            pos.x = pos.x - 1.5f;
-            transform.position = pos;
+            offset = -1;
         }
-
-        if (other.gameObject.CompareTag("RightTeleporter"))
+        else
         {
-            pos = LeftTeleporter.transform.position;
-            Debug.Log("RightTeleporter found");
-            pos.x = pos.x + 1.5f;
-            transform.position = pos;
+            offset = +1;
         }
+        Vector3 destination = otherTeleporter.position;
+        destination.x = destination.x + offset;
+        if (other.CompareTag("Fellow"))
+        {
+            other.transform.position = destination;
+        }
+        else if (other.CompareTag("Ghost"))
+        {
+            NavMeshAgent agent = other.GetComponent<NavMeshAgent>();
+            agent.Warp(destination);
+        }
+        
+        
     }
 }

@@ -19,7 +19,7 @@ public class GhostMovement: MonoBehaviour
     private string[] ghostStates = {"normal", "hide", "dead" };
     private string currentState;
 
-    public string ghostType;
+    string ghostType;
 
     [SerializeField]
     GameObject GhostHouse;
@@ -37,6 +37,7 @@ public class GhostMovement: MonoBehaviour
     
     void Start()
     {
+        ghostType = gameObject.name;
         ghostHouseVector = GhostHouse.transform.position;
         normalMaterial = GetComponent<Renderer>().material;
         g_collider = GetComponent<Collider>();
