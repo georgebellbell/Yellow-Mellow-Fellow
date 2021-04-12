@@ -73,6 +73,7 @@ public class Fellow : MonoBehaviour
 
     void FixedUpdate()
     {
+        
         Rigidbody b = GetComponent<Rigidbody>();
         Vector3 velocity = b.velocity;
 
@@ -96,7 +97,8 @@ public class Fellow : MonoBehaviour
             playerDirection = "down";
             velocity.z = -speed;
         }
-        b.velocity = velocity;
+        b.velocity = velocity *Time.deltaTime;
+        
      }
 
 
@@ -132,12 +134,10 @@ public class Fellow : MonoBehaviour
             }
             else
             {
+                gameObject.SetActive(false);
                 lives = lives - 1;
                 gameObject.transform.position = spawnLocation;
-                if(lives == 0)
-                {
-                    gameObject.SetActive(false);
-                }
+                
             }
             
         }
@@ -162,4 +162,8 @@ public class Fellow : MonoBehaviour
         return playerDirection;
     }
 
+    public void setSpeed(float newSpeed)
+    {
+        speed = newSpeed;
+    }
 }

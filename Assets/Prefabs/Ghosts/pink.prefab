@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 6599352118254651525}
   - component: {fileID: 5152662904860278842}
   m_Layer: 10
-  m_Name: coward
+  m_Name: pink
   m_TagString: Ghost
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -63,7 +63,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 83bd75c275aa02f42a53e2e2bb1e1880, type: 2}
+  - {fileID: 2100000, guid: 204f8795f5e1721489247220202f7f54, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -153,4 +153,4 @@ MonoBehaviour:
   points: []
   GhostHouse: {fileID: 0}
   scaredMaterial: {fileID: 2100000, guid: 7739378576b5b984db39591a4f1a4a23, type: 2}
-  deadMaterial: {fileID: 2100000, guid: 8f4332e27c9717b41951503f256fdd27, type: 2}
+  deadMaterial: {fileID: 2100000, guid: 6c3919a955bd5a241a1f4e57107d1c80, type: 2}

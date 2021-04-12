@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 6599352118254651525}
   - component: {fileID: 5152662904860278842}
   m_Layer: 10
-  m_Name: teamplayer
+  m_Name: cyan
   m_TagString: Ghost
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

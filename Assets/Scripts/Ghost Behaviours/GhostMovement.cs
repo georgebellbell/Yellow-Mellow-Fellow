@@ -105,16 +105,16 @@ public class GhostMovement: MonoBehaviour
         //TODO 
         switch (ghostType)
         {
-            case "ambusher":
+            case "pink":
                 if (!agent.pathPending && agent.remainingDistance < 0.5f)
                     agent.destination = behaviour.ambusher(player.transform.position, player.getDirection());
                 break;
-            case "stalker":
+            case "red":
                 if (!agent.pathPending && agent.remainingDistance < 0.5f)
                     agent.destination = behaviour.stalker(player.transform.position);
                 break;
                 //needs further look at
-            case "coward": 
+            case "orange": 
                 //if more than 4 units away will move straight for player
                 if (Vector3.Distance(player.transform.position, transform.position) > 4.0f)
                 {
@@ -123,11 +123,11 @@ public class GhostMovement: MonoBehaviour
                 // but when it gets too close, will get scared and return to patrol route
                 else
                 {
-                    Debug.Log("WOAH TOO CLOSE RUN AWAY");
-                    GotoNextPoint();
+                    if (!agent.pathPending && agent.remainingDistance < 0.5f)
+                        agent.destination = PickRandomPosition();
                 }
                 break;
-            case "teamplayer":
+            case "cyan":
                 if (!agent.pathPending && agent.remainingDistance < 0.5f)
                     agent.destination = behaviour.teamplayer(player.transform.position, player.getDirection());
                 break;
@@ -223,12 +223,13 @@ public class GhostMovement: MonoBehaviour
 
                 ghostDies();
             }
-            else
-            {
-                gameObject.transform.position = ghostHouseVector;
-            }
 
         }
+    }
+
+    public void toSpawn()
+    {
+        agent.Warp(ghostHouseVector);
     }
 
 }
