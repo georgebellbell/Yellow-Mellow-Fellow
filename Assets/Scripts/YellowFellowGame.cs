@@ -10,38 +10,16 @@ public class YellowFellowGame : MonoBehaviour
     [SerializeField]
     Fellow playerObject;
 
+    [SerializeField]
+    GameObject Score, Lives, Level;
+
+    Text scoreText, livesText, levelText;
+
+    [SerializeField]
+    GameObject gameUI, winUI, loseUI, pausedUI;
+
+
     GameObject[] collectables;
-
-    [SerializeField]
-    GameObject gameUI;
-
-    [SerializeField]
-    GameObject Score;
-
-    Text scoreText;
-
-    [SerializeField]
-    GameObject Lives;
-
-    Text livesText;
-
-    [SerializeField]
-    GameObject Level;
-
-    Text levelText;
-
-    [SerializeField]
-    GameObject winUI;
-
-    [SerializeField]
-    GameObject loseUI;
-
-    [SerializeField]
-    GameObject pausedUI;
-
-    [SerializeField]
-    GameObject Red, Orange, Cyan, Pink;
-
 
     //function got from this link: https://answers.unity.com/questions/973677/add-gameobjects-with-different-tags-to-one-array.html on 26/03/2021
     GameObject[] FindGameObjectsWithTags(string[] tags)
@@ -89,10 +67,6 @@ public class YellowFellowGame : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(!playerObject.isActiveAndEnabled && playerObject.getLives() != 0)
-        {
-            newLife();
-        }
         if (playerObject.PelletsEaten() == collectables.Length)
         {
             Time.timeScale = 0;
@@ -176,14 +150,5 @@ public class YellowFellowGame : MonoBehaviour
         playerObject.setSpeed(0);
         gameMode = InGameMode.Paused;
         pausedUI.gameObject.SetActive(true);
-    }
-
-    void newLife()
-    {
-        Red.GetComponent<GhostMovement>().toSpawn();
-        Orange.GetComponent<GhostMovement>().toSpawn();
-        Pink.GetComponent<GhostMovement>().toSpawn();
-        Cyan.GetComponent<GhostMovement>().toSpawn();
-        playerObject.gameObject.SetActive(true);
     }
 }

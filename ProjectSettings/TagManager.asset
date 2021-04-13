@@ -12,6 +12,7 @@ TagManager:
   - LeftTeleporter
   - RightTeleporter
   - GhostHouse
+  - waypoint
   layers:
   - Default
   - TransparentFX

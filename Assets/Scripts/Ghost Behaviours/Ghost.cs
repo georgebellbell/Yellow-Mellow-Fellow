@@ -3,85 +3,75 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class GhostMovement: MonoBehaviour
+public class Ghost: MonoBehaviour
 {
-    Collider g_collider;
-
-    [SerializeField]
+   
     Fellow player;
 
     GhostTypes behaviour = new GhostTypes();
 
-    public Transform[] points;
+    public Transform[] waypoints;
     private int destPoint = 0;
     private NavMeshAgent agent;
-
-    private string[] ghostStates = {"normal", "hide", "dead" };
-    private string currentState;
-
+    enum GhostState
+    {
+        normal,
+        hide,
+        dead
+    }
+    GhostState ghostState = GhostState.normal;
+   
     string ghostType;
 
-    [SerializeField]
     GameObject GhostHouse;
     Vector3 ghostHouseVector;
-    Collider gh_collider;
 
     [SerializeField]
-    Material scaredMaterial;
-
-    [SerializeField]
-    Material deadMaterial;
+    Material scaredMaterial, deadMaterial;
 
     Material normalMaterial;
 
-    
+    Collider g_collider, gh_collider;
+
     void Start()
     {
-        ghostType = gameObject.name;
-        ghostHouseVector = GhostHouse.transform.position;
         normalMaterial = GetComponent<Renderer>().material;
+
+        player = GameObject.Find("Fellow").GetComponent<Fellow>();
+        ghostType = gameObject.name;
+
+        GhostHouse = GameObject.Find("GhostHouse");
+        ghostHouseVector = GhostHouse.transform.position;
+        
+        agent = GetComponent<NavMeshAgent>();
         g_collider = GetComponent<Collider>();
         gh_collider = GhostHouse.GetComponent<Collider>();
-        agent = GetComponent<NavMeshAgent>();
     }
-    // Update is called once per frame
+
     void Update()
     {
-        if(currentState == ghostStates[2])
-        {
+       
+        if (ghostState == GhostState.dead)
             UpdateDead();
-        }
+
         else
         {
             gameObject.layer = LayerMask.NameToLayer("Ghost");
-            if (player.PowerupActive())
-            {
-                currentState = ghostStates[1];
-                GetComponent<Renderer>().material = scaredMaterial;
+            if (player.PowerupActive()) 
                 UpdateHide();
-            }
             else
             {
-
+                ghostState = GhostState.normal;
                 GetComponent<Renderer>().material = normalMaterial;
-                currentState = ghostStates[0];
-
+      
                 //WAVED MOVEMENT
                 if (Time.time <= 7 || Time.time > 27 && Time.time <= 34 ||
                 Time.time > 54 && Time.time <= 59 || Time.time > 79 && Time.time <= 84)
-                {
-                    
                     UpdatePatrol();
-                }
                 else
-                {
-                   
-                    UpdateHunt();
-                }
+                    UpdateHunt();   
             }
-
         }
-
     }
 
     //----------------------------------------------GHOST MOVEMENT-------------------------------------------------//
@@ -94,7 +84,7 @@ public class GhostMovement: MonoBehaviour
         }
         else
         {
-            Debug.Log("Patrolling!");
+           // Debug.Log("Patrolling!");
             if (!agent.pathPending && agent.remainingDistance < 0.5f)
                 GotoNextPoint();
         }
@@ -120,7 +110,7 @@ public class GhostMovement: MonoBehaviour
                 {
                     agent.destination = behaviour.stalker(player.transform.position);
                 }
-                // but when it gets too close, will get scared and return to patrol route
+                // but when it gets too close, will move in random direction
                 else
                 {
                     if (!agent.pathPending && agent.remainingDistance < 0.5f)
@@ -136,37 +126,28 @@ public class GhostMovement: MonoBehaviour
     }
     void UpdateHide()
     {
+        GetComponent<Renderer>().material = scaredMaterial;
         if (agent.remainingDistance < 0.5f)
-        {
             agent.destination = PickHidingPlace();
-        }
+       
     }
 
-    void ghostDies()
-    {
-        currentState = ghostStates[2];
-        gameObject.layer = LayerMask.NameToLayer("DeadGhost");
-        GetComponent<Renderer>().material = deadMaterial;
-    }
+   
     void UpdateDead()
     {
         agent.destination = ghostHouseVector;
-        if (g_collider.bounds.Intersects(gh_collider.bounds))
-        {
-            currentState = ghostStates[0];
-        }
-        
+        if (g_collider.bounds.Intersects(gh_collider.bounds)) ghostState = GhostState.normal;   
     }
-   
+
     void GotoNextPoint()
     {
         // Returns if no points have been set up
-        if (points.Length == 0)
+        if (waypoints.Length == 0)
             return;
 
-        agent.destination = points[destPoint].position;
+        agent.destination = waypoints[destPoint].position;
 
-        destPoint = (destPoint + 1) % points.Length;
+        destPoint = (destPoint + 1) % waypoints.Length;
     }
 
     Vector3 PickHidingPlace()
@@ -191,21 +172,9 @@ public class GhostMovement: MonoBehaviour
         return navHit.position;
     }
 
-    bool CanSeePlayer()
+    public void toSpawn()
     {
-        Vector3 rayPos = transform.position;
-        Vector3 rayDir = (player.transform.position - rayPos).normalized;
-
-        RaycastHit info;
-        if (Physics.Raycast(rayPos, rayDir, out info))
-        {
-            if (info.transform.CompareTag("Fellow"))
-            {
-                return true;
-            }
-        }
-
-        return false;
+        agent.Warp(ghostHouseVector);
     }
 
 
@@ -218,19 +187,31 @@ public class GhostMovement: MonoBehaviour
         if (collision.gameObject.CompareTag("Fellow"))
         {
             GetComponent<Rigidbody>().isKinematic = true;
-            if (player.PowerupActive())
-            {
 
-                ghostDies();
-            }
-
+            if (player.PowerupActive()) ghostDies();
         }
     }
 
-    public void toSpawn()
+    bool CanSeePlayer()
     {
-        agent.Warp(ghostHouseVector);
+        Vector3 rayPos = transform.position;
+        Vector3 rayDir = (player.transform.position - rayPos).normalized;
+
+        RaycastHit info;
+        if (Physics.Raycast(rayPos, rayDir, out info))
+        {
+            if (info.transform.CompareTag("Fellow")) return true;
+        }
+        return false;
     }
+    void ghostDies()
+    {
+        ghostState = GhostState.dead;
+        gameObject.layer = LayerMask.NameToLayer("DeadGhost");
+        GetComponent<Renderer>().material = deadMaterial;
+    }
+
+
 
 }
 

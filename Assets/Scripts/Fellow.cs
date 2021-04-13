@@ -38,8 +38,6 @@ public class Fellow : MonoBehaviour
         
     }
 
-   
-
     // Update is called once per frame
     void Update()
     {
@@ -48,7 +46,6 @@ public class Fellow : MonoBehaviour
 
         if (Input.GetKey(KeyCode.A))
         {
-           
             pos.x -= speed;
         }
         if (Input.GetKey(KeyCode.D))
@@ -135,11 +132,8 @@ public class Fellow : MonoBehaviour
             else
             {
                 gameObject.SetActive(false);
-                lives = lives - 1;
-                gameObject.transform.position = spawnLocation;
-                
+                lives = lives - 1;   
             }
-            
         }
     }
     public int PelletsEaten()
@@ -165,5 +159,11 @@ public class Fellow : MonoBehaviour
     public void setSpeed(float newSpeed)
     {
         speed = newSpeed;
+    }
+
+    public void respawn()
+    { 
+        gameObject.transform.position = spawnLocation;
+        gameObject.SetActive(true);
     }
 }
