@@ -5,6 +5,9 @@ using UnityEngine.AI;
 
 public class Ghost : MonoBehaviour
 {
+
+    [SerializeField] float trackingDuration = 5.0f;
+
     [SerializeField] Material scaredMaterial, deadMaterial;
     Material normalMaterial;
 
@@ -112,8 +115,13 @@ public class Ghost : MonoBehaviour
 
     void UpdateHunt()
     {
-        if (!agent.pathPending && agent.remainingDistance < 0.5f)
+        if (!agent.pathPending && agent.remainingDistance < 0.5f || trackingDuration < 0.0f)
+        {
+            trackingDuration = 5.0f;
             agent.destination = behaviour.GetTarget();
+        }
+       
+        trackingDuration = Mathf.Max(0.0f, trackingDuration - Time.deltaTime);
     }
 
     void UpdateHide()

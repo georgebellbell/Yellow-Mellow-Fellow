@@ -6,8 +6,10 @@ using UnityEngine.UI;
 
 public class HighScoreTable : MonoBehaviour
 {
-    [SerializeField]
-    string highscoreFile = "scores.txt";
+    [SerializeField] string highscoreFile = "scores.txt";
+    [SerializeField] Font scoreFont;
+
+    List<HighScoreEntry> allScores = new List<HighScoreEntry>();
 
     struct HighScoreEntry
     {
@@ -15,19 +17,13 @@ public class HighScoreTable : MonoBehaviour
         public string name;
     }
 
-    List<HighScoreEntry> allScores = new List<HighScoreEntry>();
+    
     // Start is called before the first frame update
     void Start()
     {
         LoadHighScoreTable();
         SortHighScoreEntries();
         CreateHighScoreText();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 
     public void LoadHighScoreTable()
@@ -43,14 +39,19 @@ public class HighScoreTable : MonoBehaviour
                 entry.name = splits[0];
                 entry.score = int.Parse(splits[1]);
                 allScores.Add(entry);
+               
             }
         }
     }
-    [SerializeField]
-    Font scoreFont;
+    
     void CreateHighScoreText()
     {
-        for (int i = 0; i < allScores.Count; ++i)
+        int scoresToOutput = 10;
+
+        if (allScores.Count < 10)
+            scoresToOutput = allScores.Count;
+
+        for (int i = 0; i < scoresToOutput; ++i)
         {
             GameObject o = new GameObject();
             o.transform.parent = transform;

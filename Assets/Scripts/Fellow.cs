@@ -58,8 +58,30 @@ public class Fellow : MonoBehaviour
         powerupTime = Mathf.Max(0.0f, powerupTime - Time.deltaTime);
     }
 
-    
 
+    private void FixedUpdate()
+    {
+        Rigidbody b = GetComponent<Rigidbody>();
+        Vector3 velocity = b.velocity;
+
+        if (Input.GetKey(KeyCode.A))
+        {
+            velocity.x = -speed;
+        }
+        if (Input.GetKey(KeyCode.D))
+        {
+            velocity.x = speed;
+        }
+        if (Input.GetKey(KeyCode.W))
+        {
+            velocity.z = speed;
+        }
+        if (Input.GetKey(KeyCode.S))
+        {
+            velocity.z = -speed;
+        }
+        
+    }
     private void OnTriggerEnter(Collider other)
     {
        

@@ -8,7 +8,7 @@ using UnityEngine.SceneManagement;
 public class YellowFellowGame : MonoBehaviour
 {
     [SerializeField] Fellow playerObject;
-    [SerializeField] Text score, lives, level;
+    [SerializeField] Text lives, level;
     [SerializeField] GameObject gameUI, winUI, loseUI, pausedUI;
 
     Ghost Red, Orange, Cyan, Pink;
@@ -148,8 +148,6 @@ public class YellowFellowGame : MonoBehaviour
 
     void UpdateMainGame()
     {
-        
-        score.text = "SCORE: " + playerObject.getScore();
         lives.text = "LIVES: " + playerObject.getLives();
         //levelText.text = "LEVEL: 1";
     }
