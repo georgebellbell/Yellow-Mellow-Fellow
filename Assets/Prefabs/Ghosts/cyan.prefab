@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: -4641157089248759169}
   - component: {fileID: 6599352118254651525}
   - component: {fileID: 5152662904860278842}
+  - component: {fileID: 476800720067219829}
   m_Layer: 10
   m_Name: cyan
   m_TagString: Ghost
@@ -149,8 +150,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae4bd38f6bfdde1428211882d3819012, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 0}
-  points: []
-  GhostHouse: {fileID: 0}
   scaredMaterial: {fileID: 2100000, guid: 7739378576b5b984db39591a4f1a4a23, type: 2}
   deadMaterial: {fileID: 2100000, guid: 878913be93702b24a8bfdcfcd146f3d8, type: 2}
+  waypoints: []
+--- !u!114 &476800720067219829
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2230023846726348446}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31dc349ce6cccbb4eb86689d9f217f0d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ghostType: cyan

@@ -72,7 +72,7 @@ public class MainMenu : MonoBehaviour
 
     void StartHighScores()
     {
-        menuAction.Play(0);
+
         gameMode = GameMode.HighScores;
         mainMenuUI.gameObject.SetActive(false);
         highScoreUI.gameObject.SetActive(true);

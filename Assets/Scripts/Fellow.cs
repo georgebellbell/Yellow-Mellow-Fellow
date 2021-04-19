@@ -4,44 +4,34 @@ using UnityEngine;
 
 public class Fellow : MonoBehaviour
 {
-    [SerializeField]
-    float speed = 0.05f;
+    [SerializeField] float defaultSpeed = 0.05f;
+    [SerializeField] int pointsPerPellet = 100;
+    [SerializeField] int pointsPerPowerup = 250;
+    [SerializeField] int pointsPerGhost = 500;
+    [SerializeField] float powerupDuration = 10.0f;
 
-    int score = 0;
-    int pelletsEaten = 0;
-
-    [SerializeField]
-    int pointsPerPellet = 100;
-
-    [SerializeField]
-    int pointsPerPowerup = 250;
-
-    [SerializeField]
-    int pointsPerGhost = 500;
-
-    [SerializeField]
-    float powerupDuration = 10.0f;
+    [SerializeField] AudioClip deathSound;
 
     float powerupTime = 0.0f;
-
+    float speed;
+    int score = 0;
+    int pelletsEaten = 0;
     int lives = 3;
-
+    
+    string playerDirection = "left";
     Vector3 spawnLocation;
 
-    string playerDirection = "left";
+    AudioSource audioSource;
 
-
-    // Start is called before the first frame update
     void Start()
     {
+        speed = defaultSpeed;
         spawnLocation = gameObject.transform.position;
-        
+        audioSource = GetComponent<AudioSource>();
     }
 
-    // Update is called once per frame
     void Update()
     {
-
         Vector3 pos = transform.position;
 
         if (Input.GetKey(KeyCode.A))
@@ -68,36 +58,7 @@ public class Fellow : MonoBehaviour
         powerupTime = Mathf.Max(0.0f, powerupTime - Time.deltaTime);
     }
 
-    void FixedUpdate()
-    {
-        
-        Rigidbody b = GetComponent<Rigidbody>();
-        Vector3 velocity = b.velocity;
-
-        if (Input.GetKey(KeyCode.A))
-        {
-            playerDirection = "left";
-            velocity.x = -speed;
-        }
-        if (Input.GetKey(KeyCode.D))
-        {
-            playerDirection = "right";
-            velocity.x = speed;
-        }
-        if (Input.GetKey(KeyCode.W))
-        {
-            playerDirection = "up";
-            velocity.z = speed;
-        }
-        if (Input.GetKey(KeyCode.S))
-        {
-            playerDirection = "down";
-            velocity.z = -speed;
-        }
-        b.velocity = velocity *Time.deltaTime;
-        
-     }
-
+    
 
     private void OnTriggerEnter(Collider other)
     {
@@ -106,7 +67,6 @@ public class Fellow : MonoBehaviour
         {
             pelletsEaten++;
             score += pointsPerPellet;
-            Debug.Log("Score is: " + score);
         }
 
         if (other.gameObject.CompareTag("Powerup"))
@@ -115,10 +75,6 @@ public class Fellow : MonoBehaviour
             score += pointsPerPowerup;
             powerupTime = powerupDuration;
         }
-    }
-    public bool PowerupActive()
-    {
-        return powerupTime > 0.0f;
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -131,10 +87,30 @@ public class Fellow : MonoBehaviour
             }
             else
             {
-                gameObject.SetActive(false);
-                lives = lives - 1;   
+                StartDeath();
             }
         }
+    }
+
+    private void StartDeath()
+    {
+        Pause();
+        gameObject.layer = LayerMask.NameToLayer("Ghost");
+        audioSource.Stop();
+        audioSource.PlayOneShot(deathSound);
+        // add animation and maybe particles
+        Invoke(nameof(KillPlayer), 1);
+    }
+
+    private void KillPlayer()
+    {
+        gameObject.SetActive(false);
+        lives = lives - 1;
+    }
+
+    public bool PowerupActive()
+    {
+        return powerupTime > 0.0f;
     }
     public int PelletsEaten()
     {
@@ -158,11 +134,23 @@ public class Fellow : MonoBehaviour
 
     public void setSpeed(float newSpeed)
     {
-        speed = newSpeed;
+        defaultSpeed = newSpeed;
+    }
+
+    public void Pause()
+    {
+        speed = 0;
+    }
+
+    public void Resume()
+    {
+        speed = defaultSpeed;
     }
 
     public void respawn()
-    { 
+    {
+        Resume();
+        gameObject.layer = LayerMask.NameToLayer("Fellow");
         gameObject.transform.position = spawnLocation;
         gameObject.SetActive(true);
     }

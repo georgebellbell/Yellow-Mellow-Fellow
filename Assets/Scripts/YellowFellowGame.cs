@@ -7,19 +7,58 @@ using UnityEngine.SceneManagement;
 
 public class YellowFellowGame : MonoBehaviour
 {
-    [SerializeField]
-    Fellow playerObject;
+    [SerializeField] Fellow playerObject;
+    [SerializeField] Text score, lives, level;
+    [SerializeField] GameObject gameUI, winUI, loseUI, pausedUI;
 
-    [SerializeField]
-    GameObject Score, Lives, Level;
-
-    Text scoreText, livesText, levelText;
-
-    [SerializeField]
-    GameObject gameUI, winUI, loseUI, pausedUI;
-
+    Ghost Red, Orange, Cyan, Pink;
 
     GameObject[] collectables;
+
+    enum InGameMode
+    {
+        InGame,
+        Paused,
+        Win,
+        Lose
+    }
+
+    InGameMode gameMode = InGameMode.InGame;
+
+    void Start()
+    {
+        SetGhostPaths();
+
+        collectables = FindGameObjectsWithTags(new string[] { "Pellet", "Powerup" });
+        StartGame();
+    }
+
+    void SetGhostPaths()
+    {
+        Red = GameObject.Find("red").GetComponent<Ghost>();
+        Red.waypoints = assignPath(Red.name);
+        Orange = GameObject.Find("orange").GetComponent<Ghost>();
+        Orange.waypoints = assignPath(Orange.name);
+        Cyan = GameObject.Find("cyan").GetComponent<Ghost>();
+        Cyan.waypoints = assignPath(Cyan.name);
+        Pink = GameObject.Find("pink").GetComponent<Ghost>();
+        Pink.waypoints = assignPath(Pink.name);
+    }
+
+    Transform[] assignPath(string name)
+    {
+        List<Transform> allNodes = new List<Transform>();
+        string pathParent = name + "Path";
+        GameObject pathObject = GameObject.Find(pathParent);
+        foreach (Transform node in pathObject.transform)
+        {
+            if (node.CompareTag("waypoint"))
+            {
+                allNodes.Add(node);
+            }
+        }
+        return allNodes.ToArray();
+    }
 
     //function got from this link: https://answers.unity.com/questions/973677/add-gameobjects-with-different-tags-to-one-array.html on 26/03/2021
     GameObject[] FindGameObjectsWithTags(string[] tags)
@@ -35,38 +74,25 @@ public class YellowFellowGame : MonoBehaviour
         return all.ToArray();
     }
 
-    enum InGameMode
-    {
-        InGame,
-        Paused,
-        Win,
-        Lose
-    }
-
-    InGameMode gameMode = InGameMode.InGame;
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        scoreText = Score.GetComponent<Text>();
-        livesText = Lives.GetComponent<Text>();
-        levelText = Level.GetComponent<Text>();
-        collectables = FindGameObjectsWithTags(new string[] { "Pellet", "Powerup" });
-        StartGame();
-    }
-
     void StartGame()
     {
+        playerObject.Resume();
         Time.timeScale = 1;
         gameMode = InGameMode.InGame;
+
         gameUI.gameObject.SetActive(true);
         winUI.gameObject.SetActive(false);
         loseUI.gameObject.SetActive(false);
+        pausedUI.gameObject.SetActive(false);    
     }
 
-    // Update is called once per frame
     void Update()
     {
+        if (!playerObject.isActiveAndEnabled && playerObject.getLives() > 0)
+        {
+            newLife();
+        }
+
         if (playerObject.PelletsEaten() == collectables.Length)
         {
             Time.timeScale = 0;
@@ -84,21 +110,47 @@ public class YellowFellowGame : MonoBehaviour
         }
         switch (gameMode)
         {
-
             case InGameMode.InGame:       UpdateMainGame(); break;
             case InGameMode.Win:          UpdateEnd(); break;
             case InGameMode.Lose:         UpdateEnd(); break;
             case InGameMode.Paused:       UpdatePause(); break;  
-
         }
     }
-   
+
+    void newLife()
+    {
+        Red.toSpawn();
+        Orange.toSpawn();
+        Pink.toSpawn();
+        Cyan.toSpawn();
+        playerObject.respawn();
+    }
+
+    void StartWin()
+    {
+        gameMode = InGameMode.Win;
+        winUI.gameObject.SetActive(true);
+    }
+
+    void StartLose()
+    {
+        gameMode = InGameMode.Lose;
+        loseUI.gameObject.SetActive(true);
+    }
+
+    void StartPause()
+    {
+        Time.timeScale = 0;
+        playerObject.Pause();
+        gameMode = InGameMode.Paused;
+        pausedUI.gameObject.SetActive(true);
+    }
 
     void UpdateMainGame()
     {
         
-        scoreText.text = "SCORE: " + playerObject.getScore();
-        livesText.text = "LIVES: " + playerObject.getLives();
+        score.text = "SCORE: " + playerObject.getScore();
+        lives.text = "LIVES: " + playerObject.getLives();
         //levelText.text = "LEVEL: 1";
     }
 
@@ -118,10 +170,7 @@ public class YellowFellowGame : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            pausedUI.gameObject.SetActive(false);
-            Time.timeScale = 1;
-            playerObject.setSpeed(0.02f);
-            gameMode = InGameMode.InGame;
+            StartGame();
         }
         else if (Input.GetKeyDown(KeyCode.Backspace))
         {
@@ -130,25 +179,5 @@ public class YellowFellowGame : MonoBehaviour
 
     }
 
-    void StartWin()
-    {
-        gameMode = InGameMode.Win;
-        winUI.gameObject.SetActive(true);
-        
-    }
 
-    void StartLose()
-    {
-        gameMode = InGameMode.Lose;
-        loseUI.gameObject.SetActive(true);
-       // winUI.gameObject.SetActive(true);
-    }
-
-    void StartPause()
-    {
-        Time.timeScale = 0;
-        playerObject.setSpeed(0);
-        gameMode = InGameMode.Paused;
-        pausedUI.gameObject.SetActive(true);
-    }
 }
