@@ -6,7 +6,7 @@ using UnityEngine.AI;
 public class Ghost : MonoBehaviour
 {
 
-    [SerializeField] float trackingDuration = 5.0f;
+    [SerializeField] float trackingDuration = 3.0f;
 
     [SerializeField] Material scaredMaterial, deadMaterial;
     Material normalMaterial;
@@ -79,7 +79,6 @@ public class Ghost : MonoBehaviour
     {
         if (CanSeePlayer())
         {
-            Debug.Log("I can see you!");
             agent.destination = player.transform.position;
         }
         else

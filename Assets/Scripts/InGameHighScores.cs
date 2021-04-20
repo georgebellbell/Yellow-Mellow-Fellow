@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
@@ -24,12 +25,21 @@ public class InGameHighScores : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        RetrieveHighScores();
+
+        SortHighScores();
+        highscore.text = "HIGHSCORE: " + currentHighscore;
+
+    }
+
+   
+    private void RetrieveHighScores()
+    {
         using (TextReader file = File.OpenText(highscoreFile))
         {
             string text = null;
             while ((text = file.ReadLine()) != null)
             {
-                Debug.Log(text);
                 string[] splits = text.Split(' ');
                 HighScoreEntry entry;
                 entry.name = splits[0];
@@ -37,13 +47,17 @@ public class InGameHighScores : MonoBehaviour
                 allScores.Add(entry);
             }
         }
+    }
+    private void SortHighScores()
+    {
+        if (allScores.Count == 0)
+            return;
 
         allScores.Sort((x, y) => y.score.CompareTo(x.score));
         currentHighscore = allScores[0].score;
-        //currentLowestscore = allScores[allScores.Count].score;
-        highscore.text = "HIGHSCORE: " + currentHighscore;
 
-    } 
+        currentLowestscore = allScores[allScores.Count - 1].score;
+    }
 
     // Update is called once per frame
     void Update()
@@ -57,11 +71,22 @@ public class InGameHighScores : MonoBehaviour
         }
     }
 
-    public void addScore()
+    public void TryToAddScore()
     {
         int currentPlayerScore = playerObject.getScore();
-        if (cu)
+
+       if (currentPlayerScore > currentHighscore)
+        {
+            Debug.Log("YOu beat the highscore!");
+            //different popup or something ingame
+        }
+       //ENTRY NOT NEEDED BUT WILL USE FOR NOW
+        HighScoreEntry entry;
+        entry.name = "George"; //get user input
+        entry.score = currentPlayerScore;
+        string line = entry.name + " " + entry.score;
+        File.AppendAllText( highscoreFile, Environment.NewLine + line);
     }
 
-
+   
 }

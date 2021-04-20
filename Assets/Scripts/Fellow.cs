@@ -8,7 +8,7 @@ public class Fellow : MonoBehaviour
     [SerializeField] int pointsPerPellet = 100;
     [SerializeField] int pointsPerPowerup = 250;
     [SerializeField] int pointsPerGhost = 500;
-    [SerializeField] float powerupDuration = 10.0f;
+    [SerializeField] float powerupDuration = 7.0f;
 
     [SerializeField] AudioClip deathSound;
 
@@ -29,36 +29,7 @@ public class Fellow : MonoBehaviour
         spawnLocation = gameObject.transform.position;
         audioSource = GetComponent<AudioSource>();
     }
-
-    void Update()
-    {
-        Vector3 pos = transform.position;
-
-        if (Input.GetKey(KeyCode.A))
-        {
-            pos.x -= speed;
-        }
-        if (Input.GetKey(KeyCode.D))
-        {
-           
-            pos.x += speed;
-        }
-        if (Input.GetKey(KeyCode.W))
-        {
-            
-            pos.z += speed;
-        }
-        if (Input.GetKey(KeyCode.S))
-        {
-           
-            pos.z -= speed;
-        }
-        transform.position = pos;
-
-        powerupTime = Mathf.Max(0.0f, powerupTime - Time.deltaTime);
-    }
-
-
+    
     private void FixedUpdate()
     {
         Rigidbody b = GetComponent<Rigidbody>();
@@ -80,7 +51,8 @@ public class Fellow : MonoBehaviour
         {
             velocity.z = -speed;
         }
-        
+        b.velocity = velocity;
+        powerupTime = Mathf.Max(0.0f, powerupTime - Time.fixedDeltaTime);
     }
     private void OnTriggerEnter(Collider other)
     {
@@ -152,11 +124,6 @@ public class Fellow : MonoBehaviour
     public string getDirection()
     {
         return playerDirection;
-    }
-
-    public void setSpeed(float newSpeed)
-    {
-        defaultSpeed = newSpeed;
     }
 
     public void Pause()

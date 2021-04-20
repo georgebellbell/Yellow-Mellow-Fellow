@@ -10,11 +10,14 @@ public class YellowFellowGame : MonoBehaviour
     [SerializeField] Fellow playerObject;
     [SerializeField] Text lives, level;
     [SerializeField] GameObject gameUI, winUI, loseUI, pausedUI;
+    [SerializeField] AudioClip victory;
 
+    InGameHighScores scores;
+    AudioSource audioSource;
     Ghost Red, Orange, Cyan, Pink;
 
     GameObject[] collectables;
-
+    bool playerScoreAdded = false;
     enum InGameMode
     {
         InGame,
@@ -27,6 +30,8 @@ public class YellowFellowGame : MonoBehaviour
 
     void Start()
     {
+        scores = GetComponent<InGameHighScores>();
+        audioSource = GetComponent<AudioSource>();
         SetGhostPaths();
 
         collectables = FindGameObjectsWithTags(new string[] { "Pellet", "Powerup" });
@@ -128,12 +133,25 @@ public class YellowFellowGame : MonoBehaviour
 
     void StartWin()
     {
+        if (!playerScoreAdded)
+        {
+            scores.TryToAddScore();
+            playerScoreAdded = true;
+        }
+
+        audioSource.PlayOneShot(victory);
         gameMode = InGameMode.Win;
         winUI.gameObject.SetActive(true);
     }
 
     void StartLose()
     {
+        if (!playerScoreAdded)
+        {
+            scores.TryToAddScore();
+            playerScoreAdded = true;
+        }
+        
         gameMode = InGameMode.Lose;
         loseUI.gameObject.SetActive(true);
     }

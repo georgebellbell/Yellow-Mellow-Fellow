@@ -8,4 +8,5 @@ Izzie 7500
 Chris 8000
 Ash 8600
 Dan -1
-George 7000
+George 900
+George 16300
