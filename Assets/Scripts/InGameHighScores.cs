@@ -81,12 +81,8 @@ public class InGameHighScores : MonoBehaviour
             //different popup or something ingame
         }
        //ENTRY NOT NEEDED BUT WILL USE FOR NOW
-        HighScoreEntry entry;
-        entry.name = "George"; //get user input
-        entry.score = currentPlayerScore;
-        string line = entry.name + " " + entry.score;
+        string playerName = PlayerPrefs.GetString("player"); //get user input
+        string line = playerName + " " + currentPlayerScore;
         File.AppendAllText( highscoreFile, Environment.NewLine + line);
     }
-
-   
 }

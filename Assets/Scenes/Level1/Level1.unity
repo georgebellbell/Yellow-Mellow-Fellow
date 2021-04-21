@@ -122,7 +122,7 @@ NavMeshSettings:
     preserveTilesOutsideBounds: 0
     debug:
       m_Flags: 0
-  m_NavMeshData: {fileID: 23800000, guid: cacd1d22e514e2f4eb55ccca7e135ce0, type: 2}
+  m_NavMeshData: {fileID: 23800000, guid: 5c40396e7dbb2b547b756fa443eb32d9, type: 2}
 --- !u!1 &1966214
 GameObject:
   m_ObjectHideFlags: 0
@@ -3472,6 +3472,7 @@ Transform:
   - {fileID: 1105818899}
   - {fileID: 190011658}
   - {fileID: 1763732398}
+  - {fileID: 8916052520354838044}
   m_Father: {fileID: 2024867685}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -21297,7 +21298,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
-    m_TransformParent: {fileID: 0}
+    m_TransformParent: {fileID: 334688698}
     m_Modifications:
     - target: {fileID: 4387997740194552641, guid: 2dc9cd5fab1f6b44b93dda3bd556b3f5, type: 3}
       propertyPath: m_LocalPosition.x
@@ -21309,7 +21310,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4387997740194552641, guid: 2dc9cd5fab1f6b44b93dda3bd556b3f5, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 7.38
+      value: 7.379999
       objectReference: {fileID: 0}
     - target: {fileID: 4387997740194552641, guid: 2dc9cd5fab1f6b44b93dda3bd556b3f5, type: 3}
       propertyPath: m_LocalRotation.x
@@ -21329,7 +21330,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4387997740194552641, guid: 2dc9cd5fab1f6b44b93dda3bd556b3f5, type: 3}
       propertyPath: m_RootOrder
-      value: 4
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 4387997740194552641, guid: 2dc9cd5fab1f6b44b93dda3bd556b3f5, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -21347,5 +21348,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: GhostGate
       objectReference: {fileID: 0}
+    - target: {fileID: 5749002283068735140, guid: 2dc9cd5fab1f6b44b93dda3bd556b3f5, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2dc9cd5fab1f6b44b93dda3bd556b3f5, type: 3}
+--- !u!4 &8916052520354838044 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4387997740194552641, guid: 2dc9cd5fab1f6b44b93dda3bd556b3f5, type: 3}
+  m_PrefabInstance: {fileID: 8916052520354838043}
+  m_PrefabAsset: {fileID: 0}

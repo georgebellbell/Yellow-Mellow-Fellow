@@ -10,3 +10,5 @@ Ash 8600
 Dan -1
 George 900
 George 16300
+George 800
+kim 18300

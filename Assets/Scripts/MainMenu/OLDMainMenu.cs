@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 
-public class MainMenu : MonoBehaviour
+public class OLDMainMenu : MonoBehaviour
 {
     [SerializeField]
     GameObject highScoreUI;
@@ -25,7 +25,7 @@ public class MainMenu : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        menuAction = GameObject.Find("Instructions").GetComponent<AudioSource>();
+       // menuAction = GameObject.Find("Instructions").GetComponent<AudioSource>();
     }
 
     // Update is called once per frame

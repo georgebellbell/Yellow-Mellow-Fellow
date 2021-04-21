@@ -33,7 +33,7 @@ public class HighScoreTable : MonoBehaviour
             string text = null;
             while ((text = file.ReadLine()) != null)
             {
-                Debug.Log(text);
+                //Debug.Log(text);
                 string[] splits = text.Split(' ');
                 HighScoreEntry entry;
                 entry.name = splits[0];
@@ -43,7 +43,11 @@ public class HighScoreTable : MonoBehaviour
             }
         }
     }
-    
+
+    public void SortHighScoreEntries()
+    {
+        allScores.Sort((x, y) => y.score.CompareTo(x.score));
+    }
     void CreateHighScoreText()
     {
         int scoresToOutput = 10;
@@ -59,20 +63,17 @@ public class HighScoreTable : MonoBehaviour
             Text t = o.AddComponent<Text>();
             t.text = allScores[i].name + "\t\t" + allScores[i].score;
             t.font = scoreFont;
-            t.fontSize = 40;
+            t.fontSize = 20;
 
-            o.transform.localPosition = new Vector3(0, -(i) * 6, 0);
+            o.transform.localPosition = new Vector3(120, -100 + (-(i) * 30), 0);
 
             o.transform.localRotation = Quaternion.identity;
-            o.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
+           // o.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
 
             o.GetComponent<RectTransform>().sizeDelta = new Vector2(400, 100);
         }
 
     }
 
-    public void SortHighScoreEntries()
-    {
-        allScores.Sort((x, y) => y.score.CompareTo(x.score));
-    }
+    
 }
