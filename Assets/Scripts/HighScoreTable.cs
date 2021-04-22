@@ -66,9 +66,9 @@ public class HighScoreTable : MonoBehaviour
             Text t = o.AddComponent<Text>();
             t.text = allScores[i].name + "\t\t" + allScores[i].score;
             t.font = scoreFont;
-            t.fontSize = 20;
+            t.fontSize = 15;
 
-            o.transform.localPosition = new Vector3(120, -100 + (-(i) * 30), 0);
+            o.transform.localPosition = new Vector3(150, -70 + (-(i) * 30), 0);
 
             o.transform.localRotation = Quaternion.identity;
            // o.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);

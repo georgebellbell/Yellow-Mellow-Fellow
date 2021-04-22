@@ -18,6 +18,7 @@ public class YellowFellowGame : MonoBehaviour
 
     GameObject[] collectables;
     bool playerScoreAdded = false;
+    int currentLevel;
     enum InGameMode
     {
         InGame,
@@ -30,7 +31,7 @@ public class YellowFellowGame : MonoBehaviour
 
     void Start()
     {
-        int currentLevel = SceneManager.GetActiveScene().buildIndex;
+        currentLevel = SceneManager.GetActiveScene().buildIndex;
         scores = GetComponent<InGameHighScores>();
         audioSource = GetComponent<AudioSource>();
         SetGhostPaths();
@@ -94,6 +95,8 @@ public class YellowFellowGame : MonoBehaviour
 
     void Update()
     {
+        lives.text = "LIVES: " + playerObject.getLives();
+
         if (!playerObject.isActiveAndEnabled && playerObject.getLives() > 0)
         {
             newLife();
@@ -114,13 +117,7 @@ public class YellowFellowGame : MonoBehaviour
         {
             StartPause();
         }
-        switch (gameMode)
-        {
-            case InGameMode.InGame:       UpdateMainGame(); break;
-            case InGameMode.Win:          UpdateEnd(); break;
-            case InGameMode.Lose:         UpdateEnd(); break;
-            case InGameMode.Paused:       UpdatePause(); break;  
-        }
+        
     }
 
     void newLife()
@@ -147,11 +144,6 @@ public class YellowFellowGame : MonoBehaviour
 
     void StartLose()
     {
-        if (!playerScoreAdded)
-        {
-            scores.TryToAddScore();
-            playerScoreAdded = true;
-        }
         
         gameMode = InGameMode.Lose;
         loseUI.gameObject.SetActive(true);
@@ -165,36 +157,26 @@ public class YellowFellowGame : MonoBehaviour
         pausedUI.gameObject.SetActive(true);
     }
 
-    void UpdateMainGame()
+
+    public void ResumeGameButton()
     {
-        lives.text = "LIVES: " + playerObject.getLives();
-        //levelText.text = "LEVEL: 1";
+        StartGame();
     }
 
-    void UpdateEnd()
+    public void RestartLevelButton()
     {
-        if (Input.GetKeyDown(KeyCode.Backspace))
-        {
-            SceneManager.LoadScene("MainMenu");
-        }
-        else if (Input.GetKeyDown(KeyCode.Space))
-        {
-            SceneManager.LoadScene("Level1");
-        }
+        SceneManager.LoadScene(currentLevel);
     }
 
-    void UpdatePause()
+    public void StartNextLevelButton()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            StartGame();
-        }
-        else if (Input.GetKeyDown(KeyCode.Backspace))
-        {
-            SceneManager.LoadScene("MainMenu");
-        }
-
+        int nextLevel = (currentLevel + 1) % SceneManager.sceneCountInBuildSettings;
+        SceneManager.LoadScene(nextLevel);
     }
 
+    public void QuitButton()
+    {
+        SceneManager.LoadScene(0);
+    }
 
 }
