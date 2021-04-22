@@ -84,7 +84,10 @@ public class Ghost : MonoBehaviour
         else
         {
             if (!agent.pathPending && agent.remainingDistance < 0.5f)
+            {
                 GotoNextPoint();
+            }
+                
         }
     }
     bool CanSeePlayer()
@@ -104,7 +107,6 @@ public class Ghost : MonoBehaviour
         // Returns if no points have been set up
         if (waypoints.Length == 0)
             return;
-
         agent.destination = waypoints[destPoint].position;
 
         destPoint = (destPoint + 1) % waypoints.Length;

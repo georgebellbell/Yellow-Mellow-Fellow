@@ -7,13 +7,13 @@ using UnityEngine.UI;
 
 public class InGameHighScores : MonoBehaviour
 {
-    [SerializeField] string highscoreFile = "scores.txt";
+    [SerializeField] string highscoreFile = "level1scores.txt";
     [SerializeField] Text highscore, score;
     [SerializeField] Fellow playerObject;
 
 
-    int currentHighscore;
-    int currentLowestscore;
+    int currentHighscore = 0000;
+    int currentLowestscore = 0000;
     bool newHighscoreAchieved = false;
     struct HighScoreEntry
     {
@@ -35,7 +35,7 @@ public class InGameHighScores : MonoBehaviour
    
     private void RetrieveHighScores()
     {
-        using (TextReader file = File.OpenText(highscoreFile))
+        using (TextReader file = File.OpenText("Highscores/" + highscoreFile))
         {
             string text = null;
             while ((text = file.ReadLine()) != null)
@@ -83,6 +83,6 @@ public class InGameHighScores : MonoBehaviour
        //ENTRY NOT NEEDED BUT WILL USE FOR NOW
         string playerName = PlayerPrefs.GetString("player"); //get user input
         string line = playerName + " " + currentPlayerScore;
-        File.AppendAllText( highscoreFile, Environment.NewLine + line);
+        File.AppendAllText("Highscores/" + highscoreFile, line + Environment.NewLine);
     }
 }

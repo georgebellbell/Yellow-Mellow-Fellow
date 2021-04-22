@@ -107,7 +107,7 @@ Rigidbody:
   m_GameObject: {fileID: 2381490389322146656}
   serializedVersion: 2
   m_Mass: 1
-  m_Drag: 0.7
+  m_Drag: 5
   m_AngularDrag: 0.05
   m_UseGravity: 1
   m_IsKinematic: 0
@@ -222,7 +222,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5874790645349b488180aa0bfe6cd63, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  defaultSpeed: 0.05
+  defaultSpeed: 6
   pointsPerPellet: 100
   pointsPerPowerup: 250
   pointsPerGhost: 500

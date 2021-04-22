@@ -10,14 +10,20 @@ public class MainMenu : MonoBehaviour
 
     public GameObject mainMenu;
     public GameObject highScores;
+    public GameObject[] levels;
     public GameObject popup;
     public InputField nameInput;
     public Text errorMessage;
+
+    int currentLevelShown = 0;
+    int numberOfLevels;
 
     AudioSource audioSource;
             
     void Start()
     {
+        numberOfLevels = levels.Length;
+        Debug.Log(numberOfLevels);
         Time.timeScale = 1;
         audioSource = GetComponent<AudioSource>();
         StartMainMenu();
@@ -85,9 +91,28 @@ public class MainMenu : MonoBehaviour
     }
     void StartHighScores()
     {
-        Debug.Log("Starting Scores!");
+        levels[currentLevelShown].SetActive(true);
         mainMenu.SetActive(false);
         highScores.SetActive(true);
+    }
+
+    public void MoveRightThroughScores()
+    {
+        levels[currentLevelShown].SetActive(false);
+        currentLevelShown = (currentLevelShown + 1) % numberOfLevels;
+        levels[currentLevelShown].SetActive(true);
+
+    }
+
+    public void MoveLeftThroughScores()
+    {
+        levels[currentLevelShown].SetActive(false);
+        currentLevelShown = (currentLevelShown - 1);
+        if(currentLevelShown == -1)
+        {
+            currentLevelShown = numberOfLevels - 1;
+        }
+        levels[currentLevelShown].SetActive(true);
     }
 
     public void QuitButton()

@@ -30,10 +30,11 @@ public class YellowFellowGame : MonoBehaviour
 
     void Start()
     {
+        int currentLevel = SceneManager.GetActiveScene().buildIndex;
         scores = GetComponent<InGameHighScores>();
         audioSource = GetComponent<AudioSource>();
         SetGhostPaths();
-
+        level.text = "LEVEL: " + currentLevel;
         collectables = FindGameObjectsWithTags(new string[] { "Pellet", "Powerup" });
         StartGame();
     }

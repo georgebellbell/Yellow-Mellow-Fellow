@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class HighScoreTable : MonoBehaviour
 {
-    [SerializeField] string highscoreFile = "scores.txt";
+    [SerializeField] string highscoreFile = "level1scores.txt";
     [SerializeField] Font scoreFont;
 
     List<HighScoreEntry> allScores = new List<HighScoreEntry>();
@@ -22,13 +22,16 @@ public class HighScoreTable : MonoBehaviour
     void Start()
     {
         LoadHighScoreTable();
-        SortHighScoreEntries();
-        CreateHighScoreText();
+        if (allScores.Count > 0)
+        {
+            SortHighScoreEntries();
+            CreateHighScoreText();
+        }
     }
 
     public void LoadHighScoreTable()
     {
-        using (TextReader file = File.OpenText(highscoreFile))
+        using (TextReader file = File.OpenText("Highscores/" + highscoreFile))
         {
             string text = null;
             while ((text = file.ReadLine()) != null)
