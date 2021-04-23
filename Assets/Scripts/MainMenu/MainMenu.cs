@@ -29,12 +29,6 @@ public class MainMenu : MonoBehaviour
         StartMainMenu();
     }
 
-   
-    public void StartPopupButton()
-    {
-        audioSource.PlayOneShot(menuSelection);
-        popup.SetActive(true);
-    }
 
     public void PlayGameButton()
     {
@@ -42,6 +36,10 @@ public class MainMenu : MonoBehaviour
         {
             audioSource.PlayOneShot(menuSelection);
             Invoke(nameof(StartGame), 1);
+        }
+        else
+        {
+            popup.SetActive(true);
         }
     }
 
