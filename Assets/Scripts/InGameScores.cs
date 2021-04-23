@@ -5,7 +5,7 @@ using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class InGameHighScores : MonoBehaviour
+public class InGameScores : MonoBehaviour
 {
     [SerializeField] string highscoreFile = "level1scores.txt";
     [SerializeField] Text highscore, score;
@@ -28,7 +28,7 @@ public class InGameHighScores : MonoBehaviour
         RetrieveHighScores();
 
         SortHighScores();
-        highscore.text = "HIGHSCORE: " + currentHighscore;
+        highscore.text = "" + currentHighscore;
 
     }
 
@@ -64,10 +64,10 @@ public class InGameHighScores : MonoBehaviour
     {
         int currentPlayerScore = playerObject.getScore();
 
-        score.text = "SCORE: " + currentPlayerScore;
+        score.text = "" + currentPlayerScore;
         if (currentPlayerScore > currentHighscore)
         {
-            highscore.text = "HIGHSCORE: " + currentPlayerScore;
+            highscore.text = "" + currentPlayerScore;
         }
     }
 

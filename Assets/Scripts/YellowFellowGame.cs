@@ -12,7 +12,7 @@ public class YellowFellowGame : MonoBehaviour
     [SerializeField] GameObject gameUI, winUI, loseUI, pausedUI;
     [SerializeField] AudioClip victory;
 
-    InGameHighScores scores;
+    InGameScores scores;
     AudioSource audioSource;
     Ghost Red, Orange, Cyan, Pink;
 
@@ -32,7 +32,7 @@ public class YellowFellowGame : MonoBehaviour
     void Start()
     {
         currentLevel = SceneManager.GetActiveScene().buildIndex;
-        scores = GetComponent<InGameHighScores>();
+        scores = GetComponent<InGameScores>();
         audioSource = GetComponent<AudioSource>();
         SetGhostPaths();
         level.text = "LEVEL: " + currentLevel;
@@ -95,7 +95,7 @@ public class YellowFellowGame : MonoBehaviour
 
     void Update()
     {
-        lives.text = "LIVES: " + playerObject.getLives();
+        lives.text = "" + playerObject.getLives();
 
         if (!playerObject.isActiveAndEnabled && playerObject.getLives() > 0)
         {

@@ -6,7 +6,7 @@ using UnityEngine.AI;
 public class Ghost : MonoBehaviour
 {
 
-    [SerializeField] float trackingDuration = 3.0f;
+    [SerializeField] float trackingDuration = 2.5f;
 
     [SerializeField] Material scaredMaterial, deadMaterial;
     Material normalMaterial;
@@ -70,7 +70,7 @@ public class Ghost : MonoBehaviour
         //WAVED MOVEMENT
         if (Time.time <= 7 || Time.time > 27 && Time.time <= 34 ||
             Time.time > 54 && Time.time <= 59 || Time.time > 79 && Time.time <= 84)
-            UpdatePatrol();
+            UpdateHunt();
         else
             UpdateHunt();
     }
@@ -118,7 +118,7 @@ public class Ghost : MonoBehaviour
     {
         if (!agent.pathPending && agent.remainingDistance < 0.5f || trackingDuration < 0.0f)
         {
-            trackingDuration = 5.0f;
+            trackingDuration = 2.5f;
             agent.destination = behaviour.GetTarget();
         }
        
