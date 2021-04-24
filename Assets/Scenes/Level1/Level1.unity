@@ -18553,6 +18553,7 @@ MonoBehaviour:
   pausedUI: {fileID: 863221014}
   victory: {fileID: 8300000, guid: ae39addd758f60944b4a2fcab01b4e29, type: 3}
   transition: {fileID: 938554534}
+  pausing: {fileID: 1431626144987259640}
 --- !u!4 &2024867685
 Transform:
   m_ObjectHideFlags: 0
@@ -19733,6 +19734,11 @@ PrefabInstance:
       objectReference: {fileID: 2024867684}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2befa01436890f04e8183b7391bff16e, type: 3}
+--- !u!95 &1431626144987259640 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 1351809518, guid: 2befa01436890f04e8183b7391bff16e, type: 3}
+  m_PrefabInstance: {fileID: 1431626144987259639}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &2103175788940476990
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -13307,6 +13307,11 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 1431626145745541089, guid: 2befa01436890f04e8183b7391bff16e, type: 3}
   m_PrefabInstance: {fileID: 1851678167}
   m_PrefabAsset: {fileID: 0}
+--- !u!95 &1351809518 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 1351809518, guid: 2befa01436890f04e8183b7391bff16e, type: 3}
+  m_PrefabInstance: {fileID: 1851678167}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1365829312
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -17843,46 +17848,22 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 2024867684}
-    - target: {fileID: 1431626144560515652, guid: 2befa01436890f04e8183b7391bff16e, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: QuitButton
-      objectReference: {fileID: 0}
-    - target: {fileID: 1431626144770917708, guid: 2befa01436890f04e8183b7391bff16e, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 1431626144848492287, guid: 2befa01436890f04e8183b7391bff16e, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 2024867684}
-    - target: {fileID: 1431626144848492287, guid: 2befa01436890f04e8183b7391bff16e, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: QuitButton
-      objectReference: {fileID: 0}
     - target: {fileID: 1431626145006690347, guid: 2befa01436890f04e8183b7391bff16e, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 2024867684}
-    - target: {fileID: 1431626145006690347, guid: 2befa01436890f04e8183b7391bff16e, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: QuitButton
-      objectReference: {fileID: 0}
     - target: {fileID: 1431626145071766304, guid: 2befa01436890f04e8183b7391bff16e, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 2024867684}
-    - target: {fileID: 1431626145071766304, guid: 2befa01436890f04e8183b7391bff16e, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: StartNextLevelButton
-      objectReference: {fileID: 0}
     - target: {fileID: 1431626145119737511, guid: 2befa01436890f04e8183b7391bff16e, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 2024867684}
-    - target: {fileID: 1431626145119737511, guid: 2befa01436890f04e8183b7391bff16e, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: RestartLevelButton
-      objectReference: {fileID: 0}
     - target: {fileID: 1431626145185800592, guid: 2befa01436890f04e8183b7391bff16e, type: 3}
       propertyPath: m_Name
       value: GameUI
@@ -17975,22 +17956,10 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 2024867684}
-    - target: {fileID: 1431626145740359499, guid: 2befa01436890f04e8183b7391bff16e, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: ResumeGameButton
-      objectReference: {fileID: 0}
-    - target: {fileID: 1431626145745541089, guid: 2befa01436890f04e8183b7391bff16e, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 1431626145792723413, guid: 2befa01436890f04e8183b7391bff16e, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 2024867684}
-    - target: {fileID: 1431626145792723413, guid: 2befa01436890f04e8183b7391bff16e, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: RestartLevelButton
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2befa01436890f04e8183b7391bff16e, type: 3}
 --- !u!224 &1851678168 stripped
@@ -19080,6 +19049,7 @@ MonoBehaviour:
   pausedUI: {fileID: 1351809513}
   victory: {fileID: 8300000, guid: ae39addd758f60944b4a2fcab01b4e29, type: 3}
   transition: {fileID: 843358166}
+  pausing: {fileID: 1351809518}
 --- !u!4 &2024867685
 Transform:
   m_ObjectHideFlags: 0

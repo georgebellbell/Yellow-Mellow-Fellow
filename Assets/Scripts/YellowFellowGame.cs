@@ -12,7 +12,7 @@ public class YellowFellowGame : MonoBehaviour
     [SerializeField] GameObject gameUI, winUI, loseUI, pausedUI;
     [SerializeField] AudioClip victory;
 
-    public Animator transition;
+    public Animator transition, pausing;
 
     InGameScores scores;
     AudioSource audioSource;
@@ -86,6 +86,7 @@ public class YellowFellowGame : MonoBehaviour
 
     void StartGame()
     {
+        paused = false;
         playerObject.Resume();
         StartAndStopGhosts(3.5f);
         Time.timeScale = 1;
@@ -167,7 +168,8 @@ public class YellowFellowGame : MonoBehaviour
         playerObject.Pause();
         StartAndStopGhosts(0f);
         gameMode = InGameMode.Paused;
-        pausedUI.gameObject.SetActive(true);
+        pausedUI.SetActive(true);
+        pausing.SetTrigger("Pause");
     }
 
     void StartAndStopGhosts(float speed)

@@ -12,6 +12,8 @@ public class Fellow : MonoBehaviour
 
     [SerializeField] AudioClip deathSound;
 
+    public Animator deathAnimation;
+
     float powerupTime = 0.0f;
     float speed;
     int score = 0;
@@ -93,6 +95,7 @@ public class Fellow : MonoBehaviour
         audioSource.Stop();
         audioSource.PlayOneShot(deathSound);
         // add animation and maybe particles
+        deathAnimation.SetTrigger("Dies");
         Invoke(nameof(KillPlayer), 1);
     }
 
@@ -115,7 +118,7 @@ public class Fellow : MonoBehaviour
     {
         return score;
     }
-
+    
     public int getLives()
     {
         return lives;
@@ -138,6 +141,7 @@ public class Fellow : MonoBehaviour
 
     public void respawn()
     {
+        deathAnimation.SetTrigger("Respawn");
         Resume();
         gameObject.layer = LayerMask.NameToLayer("Fellow");
         gameObject.transform.position = spawnLocation;

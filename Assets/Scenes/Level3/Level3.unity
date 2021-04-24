@@ -6968,6 +6968,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 5141248429569295327, guid: 1caf0a67850d1dc44be37e7cf344cd4f, type: 3}
   m_PrefabInstance: {fileID: 715617495}
   m_PrefabAsset: {fileID: 0}
+--- !u!95 &730816592 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 1668932160807046612, guid: 2befa01436890f04e8183b7391bff16e, type: 3}
+  m_PrefabInstance: {fileID: 1570007228}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &735605490
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9470,6 +9475,11 @@ Transform:
 --- !u!1 &1038121428 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1431626145745541089, guid: 2befa01436890f04e8183b7391bff16e, type: 3}
+  m_PrefabInstance: {fileID: 1570007228}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &1038121430 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 1351809518, guid: 2befa01436890f04e8183b7391bff16e, type: 3}
   m_PrefabInstance: {fileID: 1570007228}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1047648452
@@ -19119,6 +19129,8 @@ MonoBehaviour:
   loseUI: {fileID: 1471866003}
   pausedUI: {fileID: 1038121428}
   victory: {fileID: 8300000, guid: ae39addd758f60944b4a2fcab01b4e29, type: 3}
+  transition: {fileID: 730816592}
+  pausing: {fileID: 1038121430}
 --- !u!4 &2024867685
 Transform:
   m_ObjectHideFlags: 0
