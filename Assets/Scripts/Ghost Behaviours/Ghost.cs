@@ -50,6 +50,10 @@ public class Ghost : MonoBehaviour
 
     void Update()
     {
+        if (!agent.isActiveAndEnabled)
+        {
+            return;
+        }
         if (ghostState == GhostState.dead)
         {
             UpdateDead();
@@ -151,6 +155,11 @@ public class Ghost : MonoBehaviour
     public void toSpawn()
     {
         agent.Warp(ghostHouseVector);
+    }
+
+    public void StartGhost(float speed)
+    {
+        agent.speed = speed;
     }
 
 

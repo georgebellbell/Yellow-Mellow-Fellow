@@ -12,12 +12,15 @@ public class YellowFellowGame : MonoBehaviour
     [SerializeField] GameObject gameUI, winUI, loseUI, pausedUI;
     [SerializeField] AudioClip victory;
 
+    public Animator transition;
+
     InGameScores scores;
     AudioSource audioSource;
     Ghost Red, Orange, Cyan, Pink;
 
     GameObject[] collectables;
     bool playerScoreAdded = false;
+    bool paused = false;
     int currentLevel;
     enum InGameMode
     {
@@ -84,6 +87,7 @@ public class YellowFellowGame : MonoBehaviour
     void StartGame()
     {
         playerObject.Resume();
+        StartAndStopGhosts(3.5f);
         Time.timeScale = 1;
         gameMode = InGameMode.InGame;
 
@@ -104,18 +108,24 @@ public class YellowFellowGame : MonoBehaviour
 
         if (playerObject.PelletsEaten() == collectables.Length)
         {
-            Time.timeScale = 0;
+            //Time.timeScale = 0;
             StartWin();
         }
         else if (playerObject.getLives() == 0)
         {
-            Time.timeScale = 0;
+            //Time.timeScale = 0;
             StartLose();
         }
 
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            StartPause();
+            paused = !paused;
+
+            if (paused)
+                StartPause();
+            else
+                StartGame();
+                  
         }
         
     }
@@ -131,6 +141,8 @@ public class YellowFellowGame : MonoBehaviour
 
     void StartWin()
     {
+        StartAndStopGhosts(0f);
+        playerObject.Pause();
         if (!playerScoreAdded)
         {
             scores.TryToAddScore();
@@ -144,19 +156,27 @@ public class YellowFellowGame : MonoBehaviour
 
     void StartLose()
     {
-        
+        StartAndStopGhosts(0f);
         gameMode = InGameMode.Lose;
         loseUI.gameObject.SetActive(true);
     }
 
     void StartPause()
     {
-        Time.timeScale = 0;
+        //Time.timeScale = 0;
         playerObject.Pause();
+        StartAndStopGhosts(0f);
         gameMode = InGameMode.Paused;
         pausedUI.gameObject.SetActive(true);
     }
 
+    void StartAndStopGhosts(float speed)
+    {
+        Red.StartGhost(speed);
+        Cyan.StartGhost(speed);
+        Orange.StartGhost(speed);
+        Pink.StartGhost(speed);
+    }
 
     public void ResumeGameButton()
     {
@@ -165,18 +185,31 @@ public class YellowFellowGame : MonoBehaviour
 
     public void RestartLevelButton()
     {
-        SceneManager.LoadScene(currentLevel);
+        StartCoroutine(LoadLevel(currentLevel));
     }
 
     public void StartNextLevelButton()
     {
         int nextLevel = (currentLevel + 1) % SceneManager.sceneCountInBuildSettings;
-        SceneManager.LoadScene(nextLevel);
+        StartCoroutine(LoadLevel(nextLevel));
     }
 
     public void QuitButton()
     {
-        SceneManager.LoadScene(0);
+        StartCoroutine(LoadLevel(0));
     }
+   
+    IEnumerator LoadLevel(int levelIndex)
+    {
+        transition.SetTrigger("Start");
+
+        yield return new WaitForSeconds(1);
+
+        SceneManager.LoadScene(levelIndex);
+
+    }
+
+
+
 
 }

@@ -14,6 +14,7 @@ public class MainMenu : MonoBehaviour
     public GameObject popup;
     public InputField nameInput;
     public Text errorMessage;
+    public Animator transition;
 
     int currentLevelShown = 0;
     int numberOfLevels;
@@ -23,7 +24,6 @@ public class MainMenu : MonoBehaviour
     void Start()
     {
         numberOfLevels = levels.Length;
-        Debug.Log(numberOfLevels);
         Time.timeScale = 1;
         audioSource = GetComponent<AudioSource>();
         StartMainMenu();
@@ -35,6 +35,7 @@ public class MainMenu : MonoBehaviour
         if (CheckValidName())
         {
             audioSource.PlayOneShot(menuSelection);
+            transition.SetTrigger("Start");
             Invoke(nameof(StartGame), 1);
         }
         else
