@@ -10,7 +10,7 @@ public class Fellow : MonoBehaviour
     [SerializeField] int pointsPerGhost = 500;
     [SerializeField] float powerupDuration = 7.0f;
 
-    [SerializeField] AudioClip deathSound;
+    public AudioClip deathSound, munchSound, munchGhostSound, moveSound;
 
     public Animator deathAnimation;
 
@@ -23,13 +23,15 @@ public class Fellow : MonoBehaviour
     string playerDirection = "left";
     Vector3 spawnLocation;
 
-    AudioSource audioSource;
+    public AudioSource eatAudioSource, moveAudioSource;
 
     void Start()
     {
         speed = defaultSpeed;
         spawnLocation = gameObject.transform.position;
-        audioSource = GetComponent<AudioSource>();
+        //audioSource = GetComponent<AudioSource>();
+
+        deathAnimation.SetTrigger("Respawn");
     }
     
     private void FixedUpdate()
@@ -40,20 +42,31 @@ public class Fellow : MonoBehaviour
         if (Input.GetKey(KeyCode.A))
         {
             velocity.x = -speed;
+            if (!moveAudioSource.isPlaying)
+                moveAudioSource.PlayOneShot(moveSound);
         }
         if (Input.GetKey(KeyCode.D))
         {
             velocity.x = speed;
+            if (!moveAudioSource.isPlaying)
+                moveAudioSource.PlayOneShot(moveSound);
         }
         if (Input.GetKey(KeyCode.W))
         {
             velocity.z = speed;
+            if (!moveAudioSource.isPlaying)
+                moveAudioSource.PlayOneShot(moveSound);
         }
         if (Input.GetKey(KeyCode.S))
         {
             velocity.z = -speed;
+            if (!moveAudioSource.isPlaying)
+                moveAudioSource.PlayOneShot(moveSound);
         }
         b.velocity = velocity;
+       
+        
+    
         powerupTime = Mathf.Max(0.0f, powerupTime - Time.fixedDeltaTime);
     }
     private void OnTriggerEnter(Collider other)
@@ -61,6 +74,10 @@ public class Fellow : MonoBehaviour
        
         if (other.gameObject.CompareTag("Pellet"))
         {
+          
+            eatAudioSource.PlayOneShot(munchSound);
+         
+           
             pelletsEaten++;
             score += pointsPerPellet;
         }
@@ -79,6 +96,7 @@ public class Fellow : MonoBehaviour
         {
             if(PowerupActive())
             {
+                eatAudioSource.PlayOneShot(munchGhostSound);
                 score += pointsPerGhost;
             }
             else
@@ -92,8 +110,8 @@ public class Fellow : MonoBehaviour
     {
         Pause();
         gameObject.layer = LayerMask.NameToLayer("Ghost");
-        audioSource.Stop();
-        audioSource.PlayOneShot(deathSound);
+        eatAudioSource.Stop();
+        eatAudioSource.PlayOneShot(deathSound);
         // add animation and maybe particles
         deathAnimation.SetTrigger("Dies");
         Invoke(nameof(KillPlayer), 1);

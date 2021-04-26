@@ -74,7 +74,7 @@ public class Ghost : MonoBehaviour
         //WAVED MOVEMENT
         if (Time.time <= 7 || Time.time > 27 && Time.time <= 34 ||
             Time.time > 54 && Time.time <= 59 || Time.time > 79 && Time.time <= 84)
-            UpdateHunt();
+            UpdatePatrol();
         else
             UpdateHunt();
     }

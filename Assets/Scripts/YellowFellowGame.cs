@@ -10,7 +10,7 @@ public class YellowFellowGame : MonoBehaviour
     [SerializeField] Fellow playerObject;
     [SerializeField] Text lives, level;
     [SerializeField] GameObject gameUI, winUI, loseUI, pausedUI;
-    [SerializeField] AudioClip victory;
+    [SerializeField] AudioClip victory, lose;
 
     public Animator transition, pausing;
 
@@ -21,6 +21,7 @@ public class YellowFellowGame : MonoBehaviour
     GameObject[] collectables;
     bool playerScoreAdded = false;
     bool paused = false;
+    bool gameEnded = false;
     int currentLevel;
     enum InGameMode
     {
@@ -100,6 +101,10 @@ public class YellowFellowGame : MonoBehaviour
 
     void Update()
     {
+        if(gameEnded)
+        {
+            return;
+        }
         lives.text = "" + playerObject.getLives();
 
         if (!playerObject.isActiveAndEnabled && playerObject.getLives() > 0)
@@ -142,6 +147,7 @@ public class YellowFellowGame : MonoBehaviour
 
     void StartWin()
     {
+        gameEnded = true;
         StartAndStopGhosts(0f);
         playerObject.Pause();
         if (!playerScoreAdded)
@@ -149,15 +155,18 @@ public class YellowFellowGame : MonoBehaviour
             scores.TryToAddScore();
             playerScoreAdded = true;
         }
-
-        audioSource.PlayOneShot(victory);
+        if(!audioSource.isPlaying)
+            audioSource.PlayOneShot(victory);
         gameMode = InGameMode.Win;
         winUI.gameObject.SetActive(true);
     }
 
     void StartLose()
     {
+        gameEnded = true;
         StartAndStopGhosts(0f);
+        if (!audioSource.isPlaying)
+            audioSource.PlayOneShot(lose);
         gameMode = InGameMode.Lose;
         loseUI.gameObject.SetActive(true);
     }

@@ -7,6 +7,13 @@ public class Teleporters : MonoBehaviour
 {
     public Transform otherTeleporter;
     int offset;
+
+    AudioSource audioSource;
+    public AudioClip teleportSound;
+    void Start()
+    {
+        audioSource = GetComponent<AudioSource>();
+    }
     private void OnTriggerEnter(Collider other)
     {
         if (transform.position.x < otherTeleporter.position.x)
@@ -19,6 +26,9 @@ public class Teleporters : MonoBehaviour
         }
         Vector3 destination = otherTeleporter.position;
         destination.x = destination.x + offset;
+
+        audioSource.PlayOneShot(teleportSound);
+
         if (other.CompareTag("Fellow"))
         {
             other.transform.position = destination;

@@ -3294,5 +3294,9 @@ PrefabInstance:
       propertyPath: m_Name
       value: Crossfade
       objectReference: {fileID: 0}
+    - target: {fileID: 4131000714494399578, guid: ade03519a522ee547839bd62aadc9eec, type: 3}
+      propertyPath: m_Alpha
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ade03519a522ee547839bd62aadc9eec, type: 3}
