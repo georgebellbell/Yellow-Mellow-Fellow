@@ -10,7 +10,7 @@ public class YellowFellowGame : MonoBehaviour
     [SerializeField] Fellow playerObject;
     [SerializeField] Text lives, level;
     [SerializeField] GameObject gameUI, winUI, loseUI, pausedUI;
-    [SerializeField] AudioClip victory, lose;
+    [SerializeField] AudioClip victory, lose, allLevelsComplete;
 
     public Animator transition, pausing;
 
@@ -18,7 +18,7 @@ public class YellowFellowGame : MonoBehaviour
     AudioSource audioSource;
     Ghost Red, Orange, Cyan, Pink;
 
-    GameObject[] collectables;
+    public GameObject[] collectables;
     bool playerScoreAdded = false;
     bool paused = false;
     bool gameEnded = false;
@@ -40,7 +40,7 @@ public class YellowFellowGame : MonoBehaviour
         audioSource = GetComponent<AudioSource>();
         SetGhostPaths();
         level.text = "LEVEL: " + currentLevel;
-        collectables = FindGameObjectsWithTags(new string[] { "Pellet", "Powerup" });
+        collectables = FindGameObjectsWithTags(new string[] { "Pellet", "Powerup", "Timeslow" });
         StartGame();
     }
 
@@ -155,8 +155,18 @@ public class YellowFellowGame : MonoBehaviour
             scores.TryToAddScore();
             playerScoreAdded = true;
         }
-        if(!audioSource.isPlaying)
-            audioSource.PlayOneShot(victory);
+        if(currentLevel == SceneManager.sceneCountInBuildSettings - 1)
+        {
+            // end game cutscene
+            if (!audioSource.isPlaying)
+                audioSource.PlayOneShot(allLevelsComplete);
+        }
+        else
+        {
+            if (!audioSource.isPlaying)
+                audioSource.PlayOneShot(victory);
+        }
+        
         gameMode = InGameMode.Win;
         winUI.gameObject.SetActive(true);
     }

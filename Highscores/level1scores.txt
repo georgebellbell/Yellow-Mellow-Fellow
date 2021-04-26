@@ -27,3 +27,6 @@ tim 0
 tim 0
 tim 0
 tim 0
+tim 17800
+tim 18400
+tim 19200

@@ -17445,7 +17445,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1806857790
 Transform:
   m_ObjectHideFlags: 0
@@ -19075,6 +19075,7 @@ MonoBehaviour:
   pausedUI: {fileID: 1038121428}
   victory: {fileID: 8300000, guid: 52320e590bf774734a288886eba557ba, type: 3}
   lose: {fileID: 8300000, guid: 7bef0064f8567430cac22499c6b93d4f, type: 3}
+  allLevelsComplete: {fileID: 8300000, guid: 2667a0a008b044e218b63df62e2be749, type: 3}
   transition: {fileID: 730816592}
   pausing: {fileID: 1038121430}
 --- !u!4 &2024867685

@@ -13,6 +13,9 @@ TagManager:
   - RightTeleporter
   - GhostHouse
   - waypoint
+  - Timeslow
+  - DoubleScore
+  - ExtraLife
   layers:
   - Default
   - TransparentFX

@@ -9,12 +9,16 @@ public class Fellow : MonoBehaviour
     [SerializeField] int pointsPerPowerup = 250;
     [SerializeField] int pointsPerGhost = 500;
     [SerializeField] float powerupDuration = 7.0f;
+    public float timeSlowDuration = 2.5f, doublePointsDuration = 5.0f;
 
     public AudioClip deathSound, munchSound, munchGhostSound, moveSound;
-
+    public Material consumableColour;
     public Animator deathAnimation;
 
-    float powerupTime = 0.0f;
+    float eatGhostsPowerupTime = 0.0f;
+    float timeSlowPowerupTime = 0.0f;
+    float doubleScorePowerupTime = 0.0f;
+    int multiplier = 1;
     float speed;
     int score = 0;
     int pelletsEaten = 0;
@@ -65,29 +69,51 @@ public class Fellow : MonoBehaviour
         }
         b.velocity = velocity;
        
-        
-    
-        powerupTime = Mathf.Max(0.0f, powerupTime - Time.fixedDeltaTime);
+        eatGhostsPowerupTime = Mathf.Max(0.0f, eatGhostsPowerupTime - Time.fixedDeltaTime);
+        timeSlowPowerupTime = Mathf.Max(0.0f, timeSlowPowerupTime - Time.fixedDeltaTime);
+        doubleScorePowerupTime = Mathf.Max(0.0f, doubleScorePowerupTime - Time.fixedDeltaTime);
+
+        if (!(timeSlowPowerupTime > 0.0f))
+        {
+            Time.timeScale = 1f;
+        }
+        if (!DoublePointsActive())
+        {
+            multiplier = 1;
+        }
+           
+              
+
     }
     private void OnTriggerEnter(Collider other)
     {
-       
-        if (other.gameObject.CompareTag("Pellet"))
+
+        switch (other.gameObject.tag)
         {
-          
-            eatAudioSource.PlayOneShot(munchSound);
-         
-           
-            pelletsEaten++;
-            score += pointsPerPellet;
+            case "Pellet":
+                eatAudioSource.PlayOneShot(munchSound);
+                pelletsEaten++;
+                score += pointsPerPellet * multiplier;
+                break;
+            case "Powerup":
+                pelletsEaten++;
+                score += pointsPerPowerup * multiplier;
+                eatGhostsPowerupTime = powerupDuration;
+                break;
+            case "Timeslow":
+                pelletsEaten++;
+                timeSlowPowerupTime = timeSlowDuration;
+                Time.timeScale = 0.5f;
+                break;
+            case "DoubleScore":
+                doubleScorePowerupTime = doublePointsDuration;
+                multiplier = 2;
+                break;
+            case "ExtraLife":
+                lives = lives + 1;
+                break;
         }
 
-        if (other.gameObject.CompareTag("Powerup"))
-        {
-            pelletsEaten++;
-            score += pointsPerPowerup;
-            powerupTime = powerupDuration;
-        }
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -125,7 +151,12 @@ public class Fellow : MonoBehaviour
 
     public bool PowerupActive()
     {
-        return powerupTime > 0.0f;
+        return eatGhostsPowerupTime > 0.0f;
+    }
+
+    public bool DoublePointsActive()
+    {
+        return doubleScorePowerupTime > 0.0f;
     }
     public int PelletsEaten()
     {
