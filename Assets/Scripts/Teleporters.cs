@@ -10,6 +10,7 @@ public class Teleporters : MonoBehaviour
 
     AudioSource audioSource;
     public AudioClip teleportSound;
+
     void Start()
     {
         audioSource = GetComponent<AudioSource>();

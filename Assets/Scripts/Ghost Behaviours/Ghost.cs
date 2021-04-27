@@ -5,20 +5,21 @@ using UnityEngine.AI;
 
 public class Ghost : MonoBehaviour
 {
+    public float trackingDuration = 2.5f;
+    public Transform[] waypoints;
 
-    [SerializeField] float trackingDuration = 2.5f;
-
-    [SerializeField] Material scaredMaterial, deadMaterial;
+    public Material scaredMaterial;
+    public Material deadMaterial;
     Material normalMaterial;
 
     Fellow player;
 
-    public Transform[] waypoints;
+    public GameObject GhostHouse;
+    Vector3 ghostHouseVector;
+
     GhostBehaviour behaviour;
     NavMeshAgent agent;
     Collider g_collider, gh_collider;
-    GameObject GhostHouse;
-    Vector3 ghostHouseVector;
 
     int destPoint = 0;
 
@@ -33,36 +34,34 @@ public class Ghost : MonoBehaviour
     void Start()
     {
         behaviour = GetComponent<GhostBehaviour>();
-
         normalMaterial = GetComponent<Renderer>().material;
-
-        player = GameObject.Find("Fellow").GetComponent<Fellow>();
-
-        GhostHouse = GameObject.Find("GhostHouse");
-        ghostHouseVector = GhostHouse.transform.position;
-
         agent = GetComponent<NavMeshAgent>();
         g_collider = GetComponent<Collider>();
         gh_collider = GhostHouse.GetComponent<Collider>();
+        player = GameObject.Find("Fellow").GetComponent<Fellow>();
+
+        GhostHouse = GameObject.Find("GhostHouse");
+        ghostHouseVector = GhostHouse.transform.position;    
     }
-
-
 
     void Update()
     {
+        // agent is only deactivated when game is paused or ended
         if (!agent.isActiveAndEnabled)
-        {
             return;
-        }
+        
+        // if ghost is dead, move towards spawn
         if (ghostState == GhostState.dead)
         {
-            UpdateDead();
+            agent.destination = ghostHouseVector;
+            if (g_collider.bounds.Intersects(gh_collider.bounds)) ghostState = GhostState.normal;
             return;
         }
 
         gameObject.layer = LayerMask.NameToLayer("Ghost");
 
-        if (player.PowerupActive())
+        // if player has a powerup active, ghost will try to hide
+        if (player.IsPowerupActive())
         {
             UpdateHide();
             return;
@@ -72,13 +71,36 @@ public class Ghost : MonoBehaviour
         GetComponent<Renderer>().material = normalMaterial;
 
         //WAVED MOVEMENT
-        if (Time.time <= 7 || Time.time > 27 && Time.time <= 34 ||
-            Time.time > 54 && Time.time <= 59 || Time.time > 79 && Time.time <= 84)
+        if (Time.time <= 7 || Time.time > 27 && Time.time <= 34 ||Time.time > 54 && Time.time <= 59 || Time.time > 79 && Time.time <= 84)
             UpdatePatrol();
         else
             UpdateHunt();
+
+
+        trackingDuration = Mathf.Max(0.0f, trackingDuration - Time.deltaTime);
     }
 
+    void UpdateHide()
+    {
+        if (ghostState != GhostState.hide || agent.remainingDistance < 0.5f || trackingDuration < 0.0f)
+        {
+            trackingDuration = 2.5f;
+            ghostState = GhostState.hide;
+            agent.destination = PickHidingPlace();
+            GetComponent<Renderer>().material = scaredMaterial;
+        }
+    }
+    Vector3 PickHidingPlace()
+    {
+        Vector3 directionToPlayer = (player.transform.position - transform.position).normalized;
+
+        NavMeshHit navHit;
+        NavMesh.SamplePosition(transform.position - (directionToPlayer * 8.0f), out navHit, 8.0f, NavMesh.AllAreas);
+
+        return navHit.position;
+    }
+
+    // Ghost will follow a set path but if it spots player, will chase after them until losing a direct line of sight
     void UpdatePatrol()
     {
         if (CanSeePlayer())
@@ -89,11 +111,21 @@ public class Ghost : MonoBehaviour
         {
             if (!agent.pathPending && agent.remainingDistance < 0.5f)
             {
+      
                 GotoNextPoint();
-            }
-                
+            } 
         }
     }
+    void GotoNextPoint()
+    {
+        // Returns if no points have been set up
+        if (waypoints.Length == 0)
+            return;
+        agent.destination = waypoints[destPoint].position;
+
+        destPoint = (destPoint + 1) % waypoints.Length;
+    }
+
     bool CanSeePlayer()
     {
         Vector3 rayPos = transform.position;
@@ -106,17 +138,8 @@ public class Ghost : MonoBehaviour
         }
         return false;
     }
-    void GotoNextPoint()
-    {
-        // Returns if no points have been set up
-        if (waypoints.Length == 0)
-            return;
-        agent.destination = waypoints[destPoint].position;
 
-        destPoint = (destPoint + 1) % waypoints.Length;
-    }
 
-   
 
     void UpdateHunt()
     {
@@ -126,38 +149,17 @@ public class Ghost : MonoBehaviour
             agent.destination = behaviour.GetTarget();
         }
        
-        trackingDuration = Mathf.Max(0.0f, trackingDuration - Time.deltaTime);
+        
     }
 
-    void UpdateHide()
-    {
-        GetComponent<Renderer>().material = scaredMaterial;
-        if (agent.remainingDistance < 0.5f)
-            agent.destination = PickHidingPlace();
-    }
-
-    Vector3 PickHidingPlace()
-    {
-        Vector3 directionToPlayer = (player.transform.position - transform.position).normalized;
-
-        NavMeshHit navHit;
-        NavMesh.SamplePosition(transform.position - (directionToPlayer * 8.0f), out navHit, 8.0f, NavMesh.AllAreas);
-
-        return navHit.position;
-    }
-
-    void UpdateDead()
-    {
-        agent.destination = ghostHouseVector;
-        if (g_collider.bounds.Intersects(gh_collider.bounds)) ghostState = GhostState.normal;   
-    }
-
+    // Called by YellowFellowGame.cs, resets ghost to spawn when player dies
     public void toSpawn()
     {
         agent.Warp(ghostHouseVector);
     }
 
-    public void StartGhost(float speed)
+    // Called by YellowFellowGame.cs, used to pause and start ghosts depending if game is paused or the game has ended
+    public void SetGhostSpeed(float speed)
     {
         agent.speed = speed;
     }
@@ -173,7 +175,7 @@ public class Ghost : MonoBehaviour
         {
             GetComponent<Rigidbody>().isKinematic = true;
 
-            if (player.PowerupActive()) ghostDies();
+            if (player.IsPowerupActive()) ghostDies();
         }
     }
     void ghostDies()

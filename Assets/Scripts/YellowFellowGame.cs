@@ -7,43 +7,44 @@ using UnityEngine.SceneManagement;
 
 public class YellowFellowGame : MonoBehaviour
 {
-    [SerializeField] Fellow playerObject;
-    [SerializeField] Text lives, level;
-    [SerializeField] GameObject gameUI, winUI, loseUI, pausedUI;
-    [SerializeField] AudioClip victory, lose, allLevelsComplete;
+    //Game Objects
+    public Fellow playerObject;
+    Ghost Red, Orange, Cyan, Pink;
+    public GameObject[] collectables;
+
+    //Game UI
+    public Text lives, level;
+    public GameObject gameUI, winUI, loseUI, pausedUI;
+    InGameScores scores;
+    int currentLevel;
+
+    public AudioClip victory, lose, allLevelsComplete;
+    AudioSource audioSource;
 
     public Animator transition, pausing;
 
-    InGameScores scores;
-    AudioSource audioSource;
-    Ghost Red, Orange, Cyan, Pink;
-
-    public GameObject[] collectables;
+    public GameObject birdsEyeCamera;
+    public GameObject closeUpCamera;
+   
     bool playerScoreAdded = false;
     bool paused = false;
     bool gameEnded = false;
-    int currentLevel;
-    enum InGameMode
-    {
-        InGame,
-        Paused,
-        Win,
-        Lose
-    }
-
-    InGameMode gameMode = InGameMode.InGame;
-
+   
     void Start()
     {
+        birdsEyeCamera.SetActive(true);
+        closeUpCamera.SetActive(false);
+
         currentLevel = SceneManager.GetActiveScene().buildIndex;
         scores = GetComponent<InGameScores>();
         audioSource = GetComponent<AudioSource>();
         SetGhostPaths();
         level.text = "LEVEL: " + currentLevel;
-        collectables = FindGameObjectsWithTags(new string[] { "Pellet", "Powerup", "Timeslow" });
+        collectables = FindGameObjectsWithTags(new string[] { "Pellet", "Powerup", "Timeslow", "DoubleScore", "ExtraLife" });
         StartGame();
     }
 
+    // When level loads, ghosts are found and their patrol paths are set
     void SetGhostPaths()
     {
         Red = GameObject.Find("red").GetComponent<Ghost>();
@@ -56,6 +57,7 @@ public class YellowFellowGame : MonoBehaviour
         Pink.waypoints = assignPath(Pink.name);
     }
 
+    //finds the specific path for each ghost
     Transform[] assignPath(string name)
     {
         List<Transform> allNodes = new List<Transform>();
@@ -89,9 +91,7 @@ public class YellowFellowGame : MonoBehaviour
     {
         paused = false;
         playerObject.Resume();
-        StartAndStopGhosts(3.5f);
-        Time.timeScale = 1;
-        gameMode = InGameMode.InGame;
+        SetGhostSpeed(3.5f);
 
         gameUI.gameObject.SetActive(true);
         winUI.gameObject.SetActive(false);
@@ -101,25 +101,31 @@ public class YellowFellowGame : MonoBehaviour
 
     void Update()
     {
-        if(gameEnded)
-        {
+        if (gameEnded)
             return;
-        }
-        lives.text = "" + playerObject.getLives();
 
-        if (!playerObject.isActiveAndEnabled && playerObject.getLives() > 0)
+        if (Input.GetKeyDown(KeyCode.C))
         {
-            newLife();
+            
         }
+        lives.text = "" + playerObject.GetLives();
 
+        // if player is dead, and has lives left, respawn them and reset ghosts
+        if (!playerObject.isActiveAndEnabled && playerObject.GetLives() > 0)
+        {
+            ResetGame();
+        }
+        
+        // if all the collectables have been eaten, the player wins
         if (playerObject.PelletsEaten() == collectables.Length)
         {
-            //Time.timeScale = 0;
+            GameEnd();
             StartWin();
         }
-        else if (playerObject.getLives() == 0)
+        // if player has no lives left, game ends
+        else if (playerObject.GetLives() == 0)
         {
-            //Time.timeScale = 0;
+            GameEnd();
             StartLose();
         }
 
@@ -131,12 +137,12 @@ public class YellowFellowGame : MonoBehaviour
                 StartPause();
             else
                 StartGame();
-                  
+            
         }
         
     }
 
-    void newLife()
+    void ResetGame()
     {
         Red.toSpawn();
         Orange.toSpawn();
@@ -145,17 +151,22 @@ public class YellowFellowGame : MonoBehaviour
         playerObject.respawn();
     }
 
-    void StartWin()
+    void GameEnd()
     {
         gameEnded = true;
-        StartAndStopGhosts(0f);
+        SetGhostSpeed(0f);
         playerObject.Pause();
+    }
+
+    void StartWin()
+    {   
+        // if score hasnt been added, add it
         if (!playerScoreAdded)
         {
             scores.TryToAddScore();
             playerScoreAdded = true;
         }
-        if(currentLevel == SceneManager.sceneCountInBuildSettings - 1)
+        if (currentLevel == SceneManager.sceneCountInBuildSettings - 1)
         {
             // end game cutscene
             if (!audioSource.isPlaying)
@@ -166,47 +177,62 @@ public class YellowFellowGame : MonoBehaviour
             if (!audioSource.isPlaying)
                 audioSource.PlayOneShot(victory);
         }
-        
-        gameMode = InGameMode.Win;
+
         winUI.gameObject.SetActive(true);
     }
-
+   
     void StartLose()
     {
-        gameEnded = true;
-        StartAndStopGhosts(0f);
         if (!audioSource.isPlaying)
             audioSource.PlayOneShot(lose);
-        gameMode = InGameMode.Lose;
+        
         loseUI.gameObject.SetActive(true);
     }
 
     void StartPause()
     {
-        //Time.timeScale = 0;
         playerObject.Pause();
-        StartAndStopGhosts(0f);
-        gameMode = InGameMode.Paused;
+        SetGhostSpeed(0f);
         pausedUI.SetActive(true);
         pausing.SetTrigger("Pause");
     }
 
-    void StartAndStopGhosts(float speed)
+    void SetGhostSpeed(float speed)
     {
-        Red.StartGhost(speed);
-        Cyan.StartGhost(speed);
-        Orange.StartGhost(speed);
-        Pink.StartGhost(speed);
+        Red.SetGhostSpeed(speed);
+        Cyan.SetGhostSpeed(speed);
+        Orange.SetGhostSpeed(speed);
+        Pink.SetGhostSpeed(speed);
     }
+
+    // BUTTONS
 
     public void ResumeGameButton()
     {
         StartGame();
     }
 
+    public void ChangeCameraButton()
+    {
+        birdsEyeCamera.SetActive(!birdsEyeCamera.activeSelf);
+        closeUpCamera.SetActive(!closeUpCamera.activeSelf);
+
+        Text buttonText = GameObject.Find("CameraChangeText").GetComponent<Text>();
+
+        if (birdsEyeCamera.activeSelf)
+            buttonText.text = "Maze Camera";
+        else
+            buttonText.text = "Player Camera";
+
+    }
     public void RestartLevelButton()
     {
         StartCoroutine(LoadLevel(currentLevel));
+    }
+
+    public void QuitButton()
+    {
+        StartCoroutine(LoadLevel(0));
     }
 
     public void StartNextLevelButton()
@@ -215,10 +241,7 @@ public class YellowFellowGame : MonoBehaviour
         StartCoroutine(LoadLevel(nextLevel));
     }
 
-    public void QuitButton()
-    {
-        StartCoroutine(LoadLevel(0));
-    }
+   
    
     IEnumerator LoadLevel(int levelIndex)
     {

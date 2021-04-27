@@ -7,13 +7,13 @@ using UnityEngine.UI;
 
 public class InGameScores : MonoBehaviour
 {
-    [SerializeField] string highscoreFile = "level1scores.txt";
-    [SerializeField] Text highscore, score;
-    [SerializeField] Fellow playerObject;
+    public string highscoreFile = "level1scores.txt";
+    public Text highscore, score;
+    public Fellow playerObject;
 
 
     int currentHighscore = 0000;
-    int currentLowestscore = 0000;
+ 
     bool newHighscoreAchieved = false;
     struct HighScoreEntry
     {
@@ -55,14 +55,12 @@ public class InGameScores : MonoBehaviour
 
         allScores.Sort((x, y) => y.score.CompareTo(x.score));
         currentHighscore = allScores[0].score;
-
-        currentLowestscore = allScores[allScores.Count - 1].score;
     }
 
     // Update is called once per frame
     void Update()
     {
-        int currentPlayerScore = playerObject.getScore();
+        int currentPlayerScore = playerObject.GetScore();
 
         score.text = "" + currentPlayerScore;
         if (currentPlayerScore > currentHighscore)
@@ -73,14 +71,13 @@ public class InGameScores : MonoBehaviour
 
     public void TryToAddScore()
     {
-        int currentPlayerScore = playerObject.getScore();
+        int currentPlayerScore = playerObject.GetScore();
 
        if (currentPlayerScore > currentHighscore)
         {
             Debug.Log("YOu beat the highscore!");
             //different popup or something ingame
         }
-       //ENTRY NOT NEEDED BUT WILL USE FOR NOW
         string playerName = PlayerPrefs.GetString("player"); //get user input
         string line = playerName + " " + currentPlayerScore;
         File.AppendAllText("Highscores/" + highscoreFile, line + Environment.NewLine);

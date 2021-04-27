@@ -5,10 +5,10 @@ using UnityEngine.AI;
 
 public class GhostBehaviour: MonoBehaviour
 {
-    [SerializeField] string ghostType;
+    public string ghostType;
     Vector3 target;
-    
     Fellow player;
+
     private void Start()
     {
         player = GameObject.Find("Fellow").GetComponent<Fellow>();
@@ -19,16 +19,16 @@ public class GhostBehaviour: MonoBehaviour
         switch (ghostType)
         {
             case "pink":
-                   target = ambusher(player.transform.position, player.getDirection());
+                   target = Ambusher(player.transform.position, player.GetDirection());
                 break;
             case "red":
-                    target = stalker(player.transform.position);
+                target = player.transform.position;
                 break;
             case "orange":
-                target = coward(player.transform.position);
+                target = Coward(player.transform.position);
                 break;
             case "cyan":
-                    target = teamplayer(player.transform.position, player.getDirection());
+                    target = Teamplayer(player.transform.position, player.GetDirection());
                 break;
 
         }
@@ -47,13 +47,8 @@ public class GhostBehaviour: MonoBehaviour
 
         return navHit.position;
     }
-    Vector3 stalker(Vector3 playerPosition)
-    {
-        target = playerPosition;
-        return target;
-    }
-
-    Vector3 ambusher(Vector3 playerPosition,string playerDirection)
+   
+    Vector3 Ambusher(Vector3 playerPosition,string playerDirection)
     {
         target = playerPosition;
 
@@ -68,12 +63,12 @@ public class GhostBehaviour: MonoBehaviour
         return target;
     }
 
-    Vector3 coward(Vector3 playerPosition)
+    Vector3 Coward(Vector3 playerPosition)
     {
         //if more than 4 units away will move straight for player
         if (Vector3.Distance(playerPosition, transform.position) > 4.0f)
         {
-            return stalker(playerPosition);
+            return playerPosition;
         }
         // but when it gets too close, will move in random direction
         else
@@ -81,7 +76,7 @@ public class GhostBehaviour: MonoBehaviour
             return PickRandomPosition();
         }
     }
-    Vector3 teamplayer(Vector3 playerPosition, string playerDirection)
+    Vector3 Teamplayer(Vector3 playerPosition, string playerDirection)
     {
 
         Vector3 stalkerLocation = GameObject.Find("red").transform.position;

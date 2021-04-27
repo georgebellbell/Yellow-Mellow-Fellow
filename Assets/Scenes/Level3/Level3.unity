@@ -1688,6 +1688,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: cyan
       objectReference: {fileID: 0}
+    - target: {fileID: 5152662904860278842, guid: 75dd093e54a1d444da5a5424b091a1cc, type: 3}
+      propertyPath: GhostHouse
+      value: 
+      objectReference: {fileID: 932974080}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 75dd093e54a1d444da5a5424b091a1cc, type: 3}
 --- !u!1001 &129505787
@@ -1751,6 +1755,11 @@ PrefabInstance:
 Transform:
   m_CorrespondingSourceObject: {fileID: 5141248429569295327, guid: 1caf0a67850d1dc44be37e7cf344cd4f, type: 3}
   m_PrefabInstance: {fileID: 129505787}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &145490411 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 8156112063986565671, guid: 2befa01436890f04e8183b7391bff16e, type: 3}
+  m_PrefabInstance: {fileID: 1570007228}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &147782616
 GameObject:
@@ -5933,6 +5942,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: orange
       objectReference: {fileID: 0}
+    - target: {fileID: 5152662904860278842, guid: cd1438c27eb48f94586390fded8154b9, type: 3}
+      propertyPath: GhostHouse
+      value: 
+      objectReference: {fileID: 932974080}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cd1438c27eb48f94586390fded8154b9, type: 3}
 --- !u!1001 &615011190
@@ -6965,11 +6978,6 @@ PrefabInstance:
 Transform:
   m_CorrespondingSourceObject: {fileID: 5141248429569295327, guid: 1caf0a67850d1dc44be37e7cf344cd4f, type: 3}
   m_PrefabInstance: {fileID: 715617495}
-  m_PrefabAsset: {fileID: 0}
---- !u!95 &730816592 stripped
-Animator:
-  m_CorrespondingSourceObject: {fileID: 1668932160807046612, guid: 2befa01436890f04e8183b7391bff16e, type: 3}
-  m_PrefabInstance: {fileID: 1570007228}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &735605490
 PrefabInstance:
@@ -14199,11 +14207,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1431626145185800607, guid: 2befa01436890f04e8183b7391bff16e, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -15.7
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1431626145185800607, guid: 2befa01436890f04e8183b7391bff16e, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.7071068
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1431626145185800607, guid: 2befa01436890f04e8183b7391bff16e, type: 3}
       propertyPath: m_LocalRotation.y
@@ -14215,7 +14223,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1431626145185800607, guid: 2befa01436890f04e8183b7391bff16e, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.7071068
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1431626145185800607, guid: 2befa01436890f04e8183b7391bff16e, type: 3}
       propertyPath: m_RootOrder
@@ -14235,19 +14243,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1431626145185800607, guid: 2befa01436890f04e8183b7391bff16e, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 1.9
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1431626145185800607, guid: 2befa01436890f04e8183b7391bff16e, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 7.1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1431626145185800607, guid: 2befa01436890f04e8183b7391bff16e, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 800.24963
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1431626145185800607, guid: 2befa01436890f04e8183b7391bff16e, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 450.54602
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1431626145185800607, guid: 2befa01436890f04e8183b7391bff16e, type: 3}
       propertyPath: m_AnchorMin.x
@@ -14267,11 +14275,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1431626145185800607, guid: 2befa01436890f04e8183b7391bff16e, type: 3}
       propertyPath: m_Pivot.x
-      value: 0.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1431626145185800607, guid: 2befa01436890f04e8183b7391bff16e, type: 3}
       propertyPath: m_Pivot.y
-      value: 0.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1431626145740359499, guid: 2befa01436890f04e8183b7391bff16e, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -15264,6 +15272,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: red
       objectReference: {fileID: 0}
+    - target: {fileID: 5152662904860278842, guid: 420e9ccf035f7f944acc6a71eade7757, type: 3}
+      propertyPath: GhostHouse
+      value: 
+      objectReference: {fileID: 932974080}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 420e9ccf035f7f944acc6a71eade7757, type: 3}
 --- !u!1 &1633673009
@@ -17106,6 +17118,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: pink
       objectReference: {fileID: 0}
+    - target: {fileID: 5152662904860278842, guid: 51063664eaa4ebe40a1bc99a144f6d82, type: 3}
+      propertyPath: GhostHouse
+      value: 
+      objectReference: {fileID: 932974080}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 51063664eaa4ebe40a1bc99a144f6d82, type: 3}
 --- !u!1001 &1779604932
@@ -17445,7 +17461,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1806857790
 Transform:
   m_ObjectHideFlags: 0
@@ -19067,6 +19083,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerObject: {fileID: 938841707}
+  collectables: []
   lives: {fileID: 1341420322}
   level: {fileID: 67933623}
   gameUI: {fileID: 690404253}
@@ -19076,7 +19093,7 @@ MonoBehaviour:
   victory: {fileID: 8300000, guid: 52320e590bf774734a288886eba557ba, type: 3}
   lose: {fileID: 8300000, guid: 7bef0064f8567430cac22499c6b93d4f, type: 3}
   allLevelsComplete: {fileID: 8300000, guid: 2667a0a008b044e218b63df62e2be749, type: 3}
-  transition: {fileID: 730816592}
+  transition: {fileID: 145490411}
   pausing: {fileID: 1038121430}
 --- !u!4 &2024867685
 Transform:

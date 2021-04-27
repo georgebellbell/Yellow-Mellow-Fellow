@@ -4,40 +4,44 @@ using UnityEngine;
 
 public class Fellow : MonoBehaviour
 {
-    [SerializeField] float defaultSpeed = 0.05f;
-    [SerializeField] int pointsPerPellet = 100;
-    [SerializeField] int pointsPerPowerup = 250;
-    [SerializeField] int pointsPerGhost = 500;
-    [SerializeField] float powerupDuration = 7.0f;
-    public float timeSlowDuration = 2.5f, doublePointsDuration = 5.0f;
-
     public AudioClip deathSound, munchSound, munchGhostSound, moveSound;
+    public AudioSource eatAudioSource, moveAudioSource;
+
     public Material consumableColour;
     public Animator deathAnimation;
 
+    int pointsPerPellet = 100;
+    int pointsPerPowerup = 250;
+    int pointsPerGhost = 500;
+
     float eatGhostsPowerupTime = 0.0f;
+    float eatGhostsPowerupDuration = 7.0f;
+
     float timeSlowPowerupTime = 0.0f;
+    float timeSlowDuration = 2.5f;
+
     float doubleScorePowerupTime = 0.0f;
-    int multiplier = 1;
+    float doublePointsDuration = 5.0f;
+
     float speed;
+    public float defaultSpeed = 6f;
+    
+    int multiplier = 1;
     int score = 0;
     int pelletsEaten = 0;
+
     int lives = 3;
     
     string playerDirection = "left";
     Vector3 spawnLocation;
 
-    public AudioSource eatAudioSource, moveAudioSource;
-
     void Start()
     {
         speed = defaultSpeed;
         spawnLocation = gameObject.transform.position;
-        //audioSource = GetComponent<AudioSource>();
-
-        deathAnimation.SetTrigger("Respawn");
     }
     
+    // Movement and monitors time left on powerups
     private void FixedUpdate()
     {
         Rigidbody b = GetComponent<Rigidbody>();
@@ -46,69 +50,80 @@ public class Fellow : MonoBehaviour
         if (Input.GetKey(KeyCode.A))
         {
             velocity.x = -speed;
-            if (!moveAudioSource.isPlaying)
-                moveAudioSource.PlayOneShot(moveSound);
+            PlayMovementSound();
         }
         if (Input.GetKey(KeyCode.D))
         {
             velocity.x = speed;
-            if (!moveAudioSource.isPlaying)
-                moveAudioSource.PlayOneShot(moveSound);
+            PlayMovementSound();
         }
         if (Input.GetKey(KeyCode.W))
         {
             velocity.z = speed;
-            if (!moveAudioSource.isPlaying)
-                moveAudioSource.PlayOneShot(moveSound);
+            PlayMovementSound();
         }
         if (Input.GetKey(KeyCode.S))
         {
             velocity.z = -speed;
-            if (!moveAudioSource.isPlaying)
-                moveAudioSource.PlayOneShot(moveSound);
+            PlayMovementSound();
         }
         b.velocity = velocity;
-       
-        eatGhostsPowerupTime = Mathf.Max(0.0f, eatGhostsPowerupTime - Time.fixedDeltaTime);
-        timeSlowPowerupTime = Mathf.Max(0.0f, timeSlowPowerupTime - Time.fixedDeltaTime);
-        doubleScorePowerupTime = Mathf.Max(0.0f, doubleScorePowerupTime - Time.fixedDeltaTime);
+
+        ReducePowerupTime();
 
         if (!(timeSlowPowerupTime > 0.0f))
         {
             Time.timeScale = 1f;
         }
-        if (!DoublePointsActive())
+        if (!IsDoublePointsActive())
         {
             multiplier = 1;
         }
-           
-              
-
     }
+
+    // reduces powerup time
+    private void ReducePowerupTime()
+    {
+        eatGhostsPowerupTime = Mathf.Max(0.0f, eatGhostsPowerupTime - Time.fixedDeltaTime);
+        timeSlowPowerupTime = Mathf.Max(0.0f, timeSlowPowerupTime - Time.fixedDeltaTime);
+        doubleScorePowerupTime = Mathf.Max(0.0f, doubleScorePowerupTime - Time.fixedDeltaTime);
+    }
+    // As player moves, sound will play
+    private void PlayMovementSound()
+    {
+        if (!moveAudioSource.isPlaying)
+            moveAudioSource.PlayOneShot(moveSound);
+    }
+
     private void OnTriggerEnter(Collider other)
     {
-
+        //Several items in game that the player can eat
         switch (other.gameObject.tag)
         {
+            // normal pellets that increment score
             case "Pellet":
                 eatAudioSource.PlayOneShot(munchSound);
                 pelletsEaten++;
                 score += pointsPerPellet * multiplier;
                 break;
+            // allows player to eat ghosts, within a set time
             case "Powerup":
                 pelletsEaten++;
                 score += pointsPerPowerup * multiplier;
-                eatGhostsPowerupTime = powerupDuration;
+                eatGhostsPowerupTime = eatGhostsPowerupDuration;
                 break;
+                // Slows game time down briefly
             case "Timeslow":
                 pelletsEaten++;
                 timeSlowPowerupTime = timeSlowDuration;
                 Time.timeScale = 0.5f;
                 break;
+                // All score based consumables are worth twice as much
             case "DoubleScore":
                 doubleScorePowerupTime = doublePointsDuration;
                 multiplier = 2;
                 break;
+                // Player gets an extra life
             case "ExtraLife":
                 lives = lives + 1;
                 break;
@@ -116,11 +131,12 @@ public class Fellow : MonoBehaviour
 
     }
 
+    // If Player gets hit by ghost and has no powerup, they die, otherwise they get points and sound plays
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("Ghost"))
         {
-            if(PowerupActive())
+            if(IsPowerupActive())
             {
                 eatAudioSource.PlayOneShot(munchGhostSound);
                 score += pointsPerGhost;
@@ -132,29 +148,57 @@ public class Fellow : MonoBehaviour
         }
     }
 
+    //Player begins dying with sound effect, animation and other parameters changing
     private void StartDeath()
     {
+        timeSlowPowerupTime = 0;
+        doubleScorePowerupTime = 0;
+
         Pause();
         gameObject.layer = LayerMask.NameToLayer("Ghost");
         eatAudioSource.Stop();
         eatAudioSource.PlayOneShot(deathSound);
-        // add animation and maybe particles
         deathAnimation.SetTrigger("Dies");
         Invoke(nameof(KillPlayer), 1);
     }
 
+    // Removes life from player and deactivates them until respawn is called
     private void KillPlayer()
     {
         gameObject.SetActive(false);
         lives = lives - 1;
     }
 
-    public bool PowerupActive()
+    //Respawn the player if killed, called by YellowFellowGame.cs
+    public void respawn()
+    {
+        deathAnimation.SetTrigger("Respawn");
+        gameObject.layer = LayerMask.NameToLayer("Fellow");
+        gameObject.transform.position = spawnLocation;
+        gameObject.SetActive(true);
+        Resume();
+    }
+
+    // Stops player from moving when game is paused, player is killed or endgame is reached
+    public void Pause()
+    {
+        speed = 0;
+    }
+
+    // Resumes player when they are respawned or the player unpauses game
+    public void Resume()
+    {
+        speed = defaultSpeed;
+    }
+
+    // GETTERS AND SETTERS
+
+    public bool IsPowerupActive()
     {
         return eatGhostsPowerupTime > 0.0f;
     }
 
-    public bool DoublePointsActive()
+    public bool IsDoublePointsActive()
     {
         return doubleScorePowerupTime > 0.0f;
     }
@@ -163,37 +207,18 @@ public class Fellow : MonoBehaviour
         return pelletsEaten;
     }
 
-    public int getScore()
+    public int GetScore()
     {
         return score;
     }
     
-    public int getLives()
+    public int GetLives()
     {
         return lives;
     }
     
-    public string getDirection()
+    public string GetDirection()
     {
         return playerDirection;
-    }
-
-    public void Pause()
-    {
-        speed = 0;
-    }
-
-    public void Resume()
-    {
-        speed = defaultSpeed;
-    }
-
-    public void respawn()
-    {
-        deathAnimation.SetTrigger("Respawn");
-        Resume();
-        gameObject.layer = LayerMask.NameToLayer("Fellow");
-        gameObject.transform.position = spawnLocation;
-        gameObject.SetActive(true);
     }
 }

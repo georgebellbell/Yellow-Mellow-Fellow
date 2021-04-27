@@ -24,7 +24,7 @@ public class Pellet : MonoBehaviour
         if (!CompareTag("Pellet"))
             return;
 
-        if (fellow.DoublePointsActive())
+        if (fellow.IsDoublePointsActive())
         {
             renderer.material = doubleScoreMat;
             return;

@@ -17,8 +17,6 @@ public class HighScoreTable : MonoBehaviour
         public string name;
     }
 
-    
-    // Start is called before the first frame update
     void Start()
     {
         LoadHighScoreTable();
@@ -36,7 +34,6 @@ public class HighScoreTable : MonoBehaviour
             string text = null;
             while ((text = file.ReadLine()) != null)
             {
-                //Debug.Log(text);
                 string[] splits = text.Split(' ');
                 HighScoreEntry entry;
                 entry.name = splits[0];
@@ -51,10 +48,12 @@ public class HighScoreTable : MonoBehaviour
     {
         allScores.Sort((x, y) => y.score.CompareTo(x.score));
     }
+
     void CreateHighScoreText()
     {
         int scoresToOutput = 10;
 
+        // will output only the top ten scores, but if less than ten, all the scores in file
         if (allScores.Count < 10)
             scoresToOutput = allScores.Count;
 
@@ -72,7 +71,6 @@ public class HighScoreTable : MonoBehaviour
             o.transform.localPosition = new Vector3(60, -70 + (-(i) * 20), 0);
 
             o.transform.localRotation = Quaternion.identity;
-           // o.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
 
             o.GetComponent<RectTransform>().sizeDelta = new Vector2(400, 100);
         }
