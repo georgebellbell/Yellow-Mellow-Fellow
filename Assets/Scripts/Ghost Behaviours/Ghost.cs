@@ -8,6 +8,8 @@ public class Ghost : MonoBehaviour
     public float trackingDuration = 1f;
     public Transform[] waypoints;
 
+    public YellowFellowGame game;
+
     public Material scaredMaterial;
     public Material deadMaterial;
     public Material slowMaterial;
@@ -48,7 +50,7 @@ public class Ghost : MonoBehaviour
     void Update()
     {
         // agent is only deactivated when game is paused or ended
-        if (!agent.isActiveAndEnabled)
+        if (!agent.isActiveAndEnabled || game.paused)
             return;
         
         // if ghost is dead, move towards spawn

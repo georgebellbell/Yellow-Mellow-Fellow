@@ -9,6 +9,10 @@ public class Fellow : MonoBehaviour
 
     public Animator deathAnimation;
 
+    public ParticleSystem pelletEatenParticle;
+
+    public YellowFellowGame game;
+
     int pointsPerPellet = 100;
     int pointsPerPowerup = 250;
     int pointsPerGhost = 500;
@@ -36,6 +40,7 @@ public class Fellow : MonoBehaviour
 
     void Start()
     {
+
         speed = defaultSpeed;
         spawnLocation = gameObject.transform.position;
     }
@@ -43,6 +48,9 @@ public class Fellow : MonoBehaviour
     // Movement and monitors time left on powerups
     private void FixedUpdate()
     {
+        if (game.paused)
+            return;
+
         Rigidbody b = GetComponent<Rigidbody>();
         Vector3 velocity = b.velocity;
 
@@ -101,6 +109,7 @@ public class Fellow : MonoBehaviour
         {
             // normal pellets that increment score
             case "Pellet":
+                pelletEatenParticle.Play();
                 eatAudioSource.PlayOneShot(munchSound);
                 collectablesEaten++;
                 score += pointsPerPellet * multiplier;
@@ -140,7 +149,7 @@ public class Fellow : MonoBehaviour
             if(IsPowerupActive())
             {
                 eatAudioSource.PlayOneShot(munchGhostSound);
-                score += pointsPerGhost;
+                score += pointsPerGhost * multiplier;
             }
             else
             {

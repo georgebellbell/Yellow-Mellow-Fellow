@@ -28,7 +28,7 @@ public class YellowFellowGame : MonoBehaviour
     public GameObject closeUpCamera;
    
     bool playerScoreAdded = false;
-    bool paused = false;
+    public bool paused = false;
     bool gameEnded = false;
     bool finalLevel = false;
    
@@ -157,7 +157,11 @@ public class YellowFellowGame : MonoBehaviour
             paused = !paused;
 
             if (paused)
+            {
+                Debug.Log("GamePaused");
                 StartPause();
+            }
+                
             else
                 StartGame();
             
