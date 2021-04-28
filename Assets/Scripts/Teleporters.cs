@@ -28,14 +28,16 @@ public class Teleporters : MonoBehaviour
         Vector3 destination = otherTeleporter.position;
         destination.x = destination.x + offset;
 
-        audioSource.PlayOneShot(teleportSound);
+        
 
         if (other.CompareTag("Fellow"))
         {
+            audioSource.PlayOneShot(teleportSound);
             other.transform.position = destination;
         }
         else if (other.CompareTag("Ghost"))
         {
+            audioSource.PlayOneShot(teleportSound);
             NavMeshAgent agent = other.GetComponent<NavMeshAgent>();
             agent.Warp(destination);
         }

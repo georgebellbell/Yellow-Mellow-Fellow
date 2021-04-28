@@ -508,7 +508,7 @@ MonoBehaviour:
   popup: {fileID: 75223655}
   nameInput: {fileID: 1819222004}
   errorMessage: {fileID: 1009788334}
-  transition: {fileID: 1327734940}
+  transition: {fileID: 0}
 --- !u!1 &326672334
 GameObject:
   m_ObjectHideFlags: 0
@@ -2176,11 +2176,6 @@ CanvasRenderer:
 --- !u!224 &1327734939 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 7128772499382247835, guid: 7f525e5a167762a48ad8738a4ce4acdd, type: 3}
-  m_PrefabInstance: {fileID: 7128772498092654848}
-  m_PrefabAsset: {fileID: 0}
---- !u!95 &1327734940 stripped
-Animator:
-  m_CorrespondingSourceObject: {fileID: 7128772499382247836, guid: 7f525e5a167762a48ad8738a4ce4acdd, type: 3}
   m_PrefabInstance: {fileID: 7128772498092654848}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &1409987072

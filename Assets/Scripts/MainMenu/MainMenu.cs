@@ -73,7 +73,7 @@ public class MainMenu : MonoBehaviour
     public void MainMenuButton()
     {
         audioSource.PlayOneShot(menuSelection);
-        Invoke(nameof(StartMainMenu), 1);
+        Invoke(nameof(StartMainMenu), 0.5f);
     }
     public void StartMainMenu()
     {
@@ -86,7 +86,7 @@ public class MainMenu : MonoBehaviour
     public void HighScoresButton()
     {
         audioSource.PlayOneShot(menuSelection);
-        Invoke(nameof(StartHighScores), 1);
+        Invoke(nameof(StartHighScores), 0.5f);
     }
     void StartHighScores()
     {

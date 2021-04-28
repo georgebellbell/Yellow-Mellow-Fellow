@@ -5,11 +5,12 @@ using UnityEngine.AI;
 
 public class Ghost : MonoBehaviour
 {
-    public float trackingDuration = 2.5f;
+    public float trackingDuration = 1f;
     public Transform[] waypoints;
 
     public Material scaredMaterial;
     public Material deadMaterial;
+    public Material slowMaterial;
     Material normalMaterial;
 
     Fellow player;
@@ -57,8 +58,18 @@ public class Ghost : MonoBehaviour
             if (g_collider.bounds.Intersects(gh_collider.bounds)) ghostState = GhostState.normal;
             return;
         }
+       
 
         gameObject.layer = LayerMask.NameToLayer("Ghost");
+
+        if (player.IsTimeslowActive())
+        {
+            agent.speed = 1.75f;
+        }
+        else
+        {
+            agent.speed = 3.5f;
+        }
 
         // if player has a powerup active, ghost will try to hide
         if (player.IsPowerupActive())
@@ -76,19 +87,19 @@ public class Ghost : MonoBehaviour
         else
             UpdateHunt();
 
-
         trackingDuration = Mathf.Max(0.0f, trackingDuration - Time.deltaTime);
+
     }
 
     void UpdateHide()
     {
-        if (ghostState != GhostState.hide || agent.remainingDistance < 0.5f || trackingDuration < 0.0f)
+        if (ghostState != GhostState.hide || agent.remainingDistance < 1f)
         {
-            trackingDuration = 2.5f;
             ghostState = GhostState.hide;
             agent.destination = PickHidingPlace();
             GetComponent<Renderer>().material = scaredMaterial;
         }
+        
     }
     Vector3 PickHidingPlace()
     {

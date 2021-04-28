@@ -4,6 +4,7 @@ using UnityEngine;
 using System.Linq;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using System;
 
 public class YellowFellowGame : MonoBehaviour
 {
@@ -14,7 +15,7 @@ public class YellowFellowGame : MonoBehaviour
 
     //Game UI
     public Text lives, level;
-    public GameObject gameUI, winUI, loseUI, pausedUI;
+    public GameObject gameUI, winUI, finalWinUI, loseUI, pausedUI, SlowMoUI;
     InGameScores scores;
     int currentLevel;
 
@@ -29,13 +30,17 @@ public class YellowFellowGame : MonoBehaviour
     bool playerScoreAdded = false;
     bool paused = false;
     bool gameEnded = false;
+    bool finalLevel = false;
    
     void Start()
     {
+        currentLevel = SceneManager.GetActiveScene().buildIndex;
+   
+        finalLevel = (currentLevel == SceneManager.sceneCountInBuildSettings - 1);
         birdsEyeCamera.SetActive(true);
         closeUpCamera.SetActive(false);
 
-        currentLevel = SceneManager.GetActiveScene().buildIndex;
+       
         scores = GetComponent<InGameScores>();
         audioSource = GetComponent<AudioSource>();
         SetGhostPaths();
@@ -95,6 +100,7 @@ public class YellowFellowGame : MonoBehaviour
 
         gameUI.gameObject.SetActive(true);
         winUI.gameObject.SetActive(false);
+        finalWinUI.gameObject.SetActive(false);
         loseUI.gameObject.SetActive(false);
         pausedUI.gameObject.SetActive(false);    
     }
@@ -104,10 +110,7 @@ public class YellowFellowGame : MonoBehaviour
         if (gameEnded)
             return;
 
-        if (Input.GetKeyDown(KeyCode.C))
-        {
-            
-        }
+
         lives.text = "" + playerObject.GetLives();
 
         // if player is dead, and has lives left, respawn them and reset ghosts
@@ -120,13 +123,33 @@ public class YellowFellowGame : MonoBehaviour
         if (playerObject.PelletsEaten() == collectables.Length)
         {
             GameEnd();
-            StartWin();
+
+            // if score hasnt been added, add it
+            if (!playerScoreAdded)
+            {
+                scores.TryToAddScore();
+                playerScoreAdded = true;
+            }
+
+            if (finalLevel)
+                StartFinalWin();
+            else
+                StartWin();
         }
         // if player has no lives left, game ends
         else if (playerObject.GetLives() == 0)
         {
             GameEnd();
             StartLose();
+        }
+
+        if (playerObject.IsTimeslowActive())
+        {
+            SlowMoUI.SetActive(true);
+        }
+        else
+        {
+            SlowMoUI.SetActive(false);
         }
 
         if (Input.GetKeyDown(KeyCode.Escape))
@@ -140,6 +163,14 @@ public class YellowFellowGame : MonoBehaviour
             
         }
         
+    }
+
+    void StartFinalWin()
+    {
+        if (!audioSource.isPlaying)
+            audioSource.PlayOneShot(allLevelsComplete);
+
+        finalWinUI.gameObject.SetActive(true);
     }
 
     void ResetGame()
@@ -159,24 +190,9 @@ public class YellowFellowGame : MonoBehaviour
     }
 
     void StartWin()
-    {   
-        // if score hasnt been added, add it
-        if (!playerScoreAdded)
-        {
-            scores.TryToAddScore();
-            playerScoreAdded = true;
-        }
-        if (currentLevel == SceneManager.sceneCountInBuildSettings - 1)
-        {
-            // end game cutscene
-            if (!audioSource.isPlaying)
-                audioSource.PlayOneShot(allLevelsComplete);
-        }
-        else
-        {
-            if (!audioSource.isPlaying)
+    {
+        if (!audioSource.isPlaying)
                 audioSource.PlayOneShot(victory);
-        }
 
         winUI.gameObject.SetActive(true);
     }
@@ -241,7 +257,10 @@ public class YellowFellowGame : MonoBehaviour
         StartCoroutine(LoadLevel(nextLevel));
     }
 
-   
+    public void StartLevelOne()
+    {
+        StartCoroutine(LoadLevel(1));
+    }
    
     IEnumerator LoadLevel(int levelIndex)
     {

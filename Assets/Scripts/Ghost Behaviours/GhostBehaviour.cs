@@ -35,7 +35,7 @@ public class GhostBehaviour: MonoBehaviour
         return target;
     }
 
-    Vector3 PickRandomPosition()
+    public Vector3 PickRandomPosition()
     {
         Vector3 destination = transform.position;
         Vector2 randomDirection = UnityEngine.Random.insideUnitCircle * 8.0f;
@@ -88,8 +88,8 @@ public class GhostBehaviour: MonoBehaviour
             case "up": playerPosition.z = playerPosition.z + 1; break;
             case "down": playerPosition.z = playerPosition.z - 1; break;
         }
-        target.x = target.x + ((stalkerLocation.x - playerPosition.x)*2);
-        target.z = target.z + ((stalkerLocation.z - playerPosition.z) * 2);
+        target.x = target.x + ((stalkerLocation.x - playerPosition.x) * 0.5f);
+        target.z = target.z + ((stalkerLocation.z - playerPosition.z) * 0.5f);
         return target;
     }
 }

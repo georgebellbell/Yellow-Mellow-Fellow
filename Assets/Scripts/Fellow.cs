@@ -7,7 +7,6 @@ public class Fellow : MonoBehaviour
     public AudioClip deathSound, munchSound, munchGhostSound, moveSound;
     public AudioSource eatAudioSource, moveAudioSource;
 
-    public Material consumableColour;
     public Animator deathAnimation;
 
     int pointsPerPellet = 100;
@@ -15,10 +14,10 @@ public class Fellow : MonoBehaviour
     int pointsPerGhost = 500;
 
     float eatGhostsPowerupTime = 0.0f;
-    float eatGhostsPowerupDuration = 7.0f;
+    float eatGhostsPowerupDuration = 5.0f;
 
     float timeSlowPowerupTime = 0.0f;
-    float timeSlowDuration = 2.5f;
+    float timeSlowDuration = 5.0f;
 
     float doubleScorePowerupTime = 0.0f;
     float doublePointsDuration = 5.0f;
@@ -28,7 +27,7 @@ public class Fellow : MonoBehaviour
     
     int multiplier = 1;
     int score = 0;
-    int pelletsEaten = 0;
+    int collectablesEaten = 0;
 
     int lives = 3;
     
@@ -71,13 +70,13 @@ public class Fellow : MonoBehaviour
 
         ReducePowerupTime();
 
-        if (!(timeSlowPowerupTime > 0.0f))
-        {
-            Time.timeScale = 1f;
-        }
         if (!IsDoublePointsActive())
         {
             multiplier = 1;
+        }
+        if (!IsTimeslowActive())
+        {
+            speed = defaultSpeed;
         }
     }
 
@@ -103,28 +102,30 @@ public class Fellow : MonoBehaviour
             // normal pellets that increment score
             case "Pellet":
                 eatAudioSource.PlayOneShot(munchSound);
-                pelletsEaten++;
+                collectablesEaten++;
                 score += pointsPerPellet * multiplier;
                 break;
             // allows player to eat ghosts, within a set time
             case "Powerup":
-                pelletsEaten++;
+                collectablesEaten++;
                 score += pointsPerPowerup * multiplier;
                 eatGhostsPowerupTime = eatGhostsPowerupDuration;
                 break;
-                // Slows game time down briefly
+                // Slows movement down briefly
             case "Timeslow":
-                pelletsEaten++;
+                collectablesEaten++;
                 timeSlowPowerupTime = timeSlowDuration;
-                Time.timeScale = 0.5f;
+                speed = defaultSpeed / 2;
                 break;
                 // All score based consumables are worth twice as much
             case "DoubleScore":
+                collectablesEaten++;
                 doubleScorePowerupTime = doublePointsDuration;
                 multiplier = 2;
                 break;
                 // Player gets an extra life
             case "ExtraLife":
+                collectablesEaten++;
                 lives = lives + 1;
                 break;
         }
@@ -202,9 +203,14 @@ public class Fellow : MonoBehaviour
     {
         return doubleScorePowerupTime > 0.0f;
     }
+
+    public bool IsTimeslowActive()
+    {
+        return timeSlowPowerupTime > 0.0f;
+    }
     public int PelletsEaten()
     {
-        return pelletsEaten;
+        return collectablesEaten;
     }
 
     public int GetScore()
