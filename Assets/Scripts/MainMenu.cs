@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour
 {
-    [SerializeField] AudioClip menuSelection;
+    public AudioClip menuSelection;
 
     public GameObject mainMenu;
     public GameObject highScores;
@@ -100,7 +100,6 @@ public class MainMenu : MonoBehaviour
         levels[currentLevelShown].SetActive(false);
         currentLevelShown = (currentLevelShown + 1) % numberOfLevels;
         levels[currentLevelShown].SetActive(true);
-
     }
 
     public void MoveLeftThroughScores()

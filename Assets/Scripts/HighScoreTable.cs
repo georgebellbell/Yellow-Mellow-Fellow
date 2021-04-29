@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class HighScoreTable : MonoBehaviour
 {
-    [SerializeField] string highscoreFile = "level1scores.txt";
+    public string highscoreFile = "level1scores.txt";
     [SerializeField] Font scoreFont;
 
     List<HighScoreEntry> allScores = new List<HighScoreEntry>();

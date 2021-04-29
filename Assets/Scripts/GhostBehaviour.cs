@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.AI;
 
 public class GhostBehaviour: MonoBehaviour
@@ -19,36 +17,23 @@ public class GhostBehaviour: MonoBehaviour
         switch (ghostType)
         {
             case "pink":
-                   target = Ambusher(player.transform.position, player.GetDirection());
+                  target = PinkGhost(player.transform.position, player.GetDirection());
                 break;
             case "red":
                 target = player.transform.position;
                 break;
             case "orange":
-                target = Coward(player.transform.position);
+                target = OrangeGhost(player.transform.position);
                 break;
             case "cyan":
-                target = Teamplayer(player.transform.position, player.GetDirection());
+                target = CyanGhost(player.transform.position, player.GetDirection());
                 break;
 
         }
         return target;
     }
 
-    public Vector3 PickRandomPosition()
-    {
-        Vector3 destination = transform.position;
-        Vector2 randomDirection = UnityEngine.Random.insideUnitCircle * 8.0f;
-        destination.x += randomDirection.x;
-        destination.y += randomDirection.y;
-
-        NavMeshHit navHit;
-        NavMesh.SamplePosition(destination, out navHit, 8.0f, NavMesh.AllAreas);
-
-        return navHit.position;
-    }
-   
-    Vector3 Ambusher(Vector3 playerPosition,string playerDirection)
+    Vector3 PinkGhost(Vector3 playerPosition,string playerDirection)
     {
         target = playerPosition;
 
@@ -63,7 +48,7 @@ public class GhostBehaviour: MonoBehaviour
         return target;
     }
 
-    Vector3 Coward(Vector3 playerPosition)
+    Vector3 OrangeGhost(Vector3 playerPosition)
     {
         //if more than 4 units away will move straight for player
         if (Vector3.Distance(playerPosition, transform.position) > 4.0f)
@@ -76,9 +61,10 @@ public class GhostBehaviour: MonoBehaviour
             return PickRandomPosition();
         }
     }
-    Vector3 Teamplayer(Vector3 playerPosition, string playerDirection)
-    {
 
+    // position determined by both player and red ghost, moving to point halfway between the two
+    Vector3 CyanGhost(Vector3 playerPosition, string playerDirection)
+    {
         Vector3 stalkerLocation = GameObject.Find("red").transform.position;
         target = stalkerLocation;
         switch (playerDirection)
@@ -90,6 +76,22 @@ public class GhostBehaviour: MonoBehaviour
         }
         target.x = target.x + ((stalkerLocation.x - playerPosition.x) * 0.5f);
         target.z = target.z + ((stalkerLocation.z - playerPosition.z) * 0.5f);
-        return target;
+
+        NavMeshHit navHit;
+        NavMesh.SamplePosition(target, out navHit, 8.0f, NavMesh.AllAreas);
+        return navHit.position;
+    }
+
+    public Vector3 PickRandomPosition()
+    {
+        Vector3 destination = transform.position;
+        Vector2 randomDirection = UnityEngine.Random.insideUnitCircle * 8.0f;
+        destination.x += randomDirection.x;
+        destination.y += randomDirection.y;
+
+        NavMeshHit navHit;
+        NavMesh.SamplePosition(destination, out navHit, 8.0f, NavMesh.AllAreas);
+
+        return navHit.position;
     }
 }

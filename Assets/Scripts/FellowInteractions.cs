@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class FellowInteractions : MonoBehaviour
@@ -14,8 +13,6 @@ public class FellowInteractions : MonoBehaviour
     Material currentPelletParticle;
     Material currentPowerUpParticle;
     Material currentEatGhostParticle;
-
-    float speed;
 
     public Material[] allParticles;
 
@@ -45,7 +42,6 @@ public class FellowInteractions : MonoBehaviour
     void Start()
     {
         CheckDoubleScorePowerup();
-        speed = GetComponent<FellowMovement>().speed;
         spawnLocation = gameObject.transform.position;
     }
 

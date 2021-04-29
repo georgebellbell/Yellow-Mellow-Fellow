@@ -1446,13 +1446,13 @@ PrefabInstance:
       value: cyan
       objectReference: {fileID: 0}
     - target: {fileID: 5152662904860278842, guid: 75dd093e54a1d444da5a5424b091a1cc, type: 3}
-      propertyPath: GhostHouse
-      value: 
-      objectReference: {fileID: 932974080}
-    - target: {fileID: 5152662904860278842, guid: 75dd093e54a1d444da5a5424b091a1cc, type: 3}
       propertyPath: game
       value: 
       objectReference: {fileID: 2024867684}
+    - target: {fileID: 5152662904860278842, guid: 75dd093e54a1d444da5a5424b091a1cc, type: 3}
+      propertyPath: GhostHouse
+      value: 
+      objectReference: {fileID: 932974080}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 75dd093e54a1d444da5a5424b091a1cc, type: 3}
 --- !u!1001 &129167340
@@ -5241,13 +5241,13 @@ PrefabInstance:
       value: orange
       objectReference: {fileID: 0}
     - target: {fileID: 5152662904860278842, guid: cd1438c27eb48f94586390fded8154b9, type: 3}
-      propertyPath: GhostHouse
-      value: 
-      objectReference: {fileID: 932974080}
-    - target: {fileID: 5152662904860278842, guid: cd1438c27eb48f94586390fded8154b9, type: 3}
       propertyPath: game
       value: 
       objectReference: {fileID: 2024867684}
+    - target: {fileID: 5152662904860278842, guid: cd1438c27eb48f94586390fded8154b9, type: 3}
+      propertyPath: GhostHouse
+      value: 
+      objectReference: {fileID: 932974080}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cd1438c27eb48f94586390fded8154b9, type: 3}
 --- !u!1001 &614077676
@@ -15225,13 +15225,13 @@ PrefabInstance:
       value: red
       objectReference: {fileID: 0}
     - target: {fileID: 5152662904860278842, guid: 420e9ccf035f7f944acc6a71eade7757, type: 3}
-      propertyPath: GhostHouse
-      value: 
-      objectReference: {fileID: 932974080}
-    - target: {fileID: 5152662904860278842, guid: 420e9ccf035f7f944acc6a71eade7757, type: 3}
       propertyPath: game
       value: 
       objectReference: {fileID: 2024867684}
+    - target: {fileID: 5152662904860278842, guid: 420e9ccf035f7f944acc6a71eade7757, type: 3}
+      propertyPath: GhostHouse
+      value: 
+      objectReference: {fileID: 932974080}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 420e9ccf035f7f944acc6a71eade7757, type: 3}
 --- !u!1001 &1636237852
@@ -16289,13 +16289,13 @@ PrefabInstance:
       value: pink
       objectReference: {fileID: 0}
     - target: {fileID: 5152662904860278842, guid: 51063664eaa4ebe40a1bc99a144f6d82, type: 3}
-      propertyPath: GhostHouse
-      value: 
-      objectReference: {fileID: 932974080}
-    - target: {fileID: 5152662904860278842, guid: 51063664eaa4ebe40a1bc99a144f6d82, type: 3}
       propertyPath: game
       value: 
       objectReference: {fileID: 2024867684}
+    - target: {fileID: 5152662904860278842, guid: 51063664eaa4ebe40a1bc99a144f6d82, type: 3}
+      propertyPath: GhostHouse
+      value: 
+      objectReference: {fileID: 932974080}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 51063664eaa4ebe40a1bc99a144f6d82, type: 3}
 --- !u!1001 &1768311385

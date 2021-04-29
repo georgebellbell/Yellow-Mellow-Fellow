@@ -8,7 +8,7 @@ public class Collectables : MonoBehaviour
     Material defaultMat;
 
     FellowInteractions fellow;
-    Renderer renderer;
+    Renderer itemRenderer;
 
     void Start()
     {
@@ -16,8 +16,8 @@ public class Collectables : MonoBehaviour
         if (!CompareTag("Pellet")) return;
 
         fellow = GameObject.Find("Fellow").GetComponent<FellowInteractions>();
-        renderer = GetComponent<Renderer>();
-        defaultMat = renderer.material;
+        itemRenderer = GetComponent<Renderer>();
+        defaultMat = itemRenderer.material;
     }
 
     void Update()
@@ -28,11 +28,11 @@ public class Collectables : MonoBehaviour
         // if player has the DoubleScorePowerup active, change the item colour
         if (fellow.IsDoublePointsActive())
         {
-            renderer.material = doubleScoreMat;
+            itemRenderer.material = doubleScoreMat;
             return;
         }
-        
-        renderer.material = defaultMat;
+
+        itemRenderer.material = defaultMat;
     }
 
     private void OnTriggerEnter(Collider other)

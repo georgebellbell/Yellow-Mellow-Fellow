@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.AI;
 
 public class Ghost : MonoBehaviour
@@ -35,65 +33,60 @@ public class Ghost : MonoBehaviour
 
     void Start()
     {
-        behaviour = GetComponent<GhostBehaviour>();
         normalMaterial = GetComponent<Renderer>().material;
+        behaviour = GetComponent<GhostBehaviour>();
         agent = GetComponent<NavMeshAgent>();
         g_collider = GetComponent<Collider>();
-        gh_collider = GhostHouse.GetComponent<Collider>();
+        
         player = GameObject.Find("Fellow").GetComponent<FellowInteractions>();
 
         GhostHouse = GameObject.Find("GhostHouse");
-        ghostHouseVector = GhostHouse.transform.position;    
+        ghostHouseVector = GhostHouse.transform.position;
+        gh_collider = GhostHouse.GetComponent<Collider>();
     }
 
     void Update()
     {
         // agent is only deactivated when game is paused or ended
-        if (!agent.isActiveAndEnabled || game.paused)
-        {
+        if (game.paused) 
+        { 
             agent.isStopped = true;
-            return;
+            return; 
         }
-
         agent.isStopped = false;
+
+        // Check if player has the timeSlowPowerup active, if so, reduce ghost speed by half
+        if (player.IsTimeslowActive()) agent.speed = 1.75f;
+        else agent.speed = 3.5f;
+
         // if ghost is dead, move towards spawn
         if (ghostState == GhostState.dead)
         {
             agent.destination = ghostHouseVector;
+            // if ghost intersects with the collider of ghost spawn, ghost goes back to normal
             if (g_collider.bounds.Intersects(gh_collider.bounds)) ghostState = GhostState.normal;
             return;
         }
        
-
         gameObject.layer = LayerMask.NameToLayer("Ghost");
 
-        if (player.IsTimeslowActive())
-        {
-            agent.speed = 1.75f;
-        }
-        else
-        {
-            agent.speed = 3.5f;
-        }
-
         // if player has a powerup active, ghost will try to hide
-        if (player.IsPowerupActive())
-        {
+        if (player.IsPowerupActive()) 
+        { 
             UpdateHide();
-            return;
+            return; 
         }
 
         ghostState = GhostState.normal;
         GetComponent<Renderer>().material = normalMaterial;
 
-        //WAVED MOVEMENT
+        //Wave based movement so the ghosts will alternate between partolling a set path and following the player
         if (Time.time <= 7 || Time.time > 27 && Time.time <= 34 ||Time.time > 54 && Time.time <= 59 || Time.time > 79 && Time.time <= 84)
             UpdatePatrol();
         else
             UpdateHunt();
 
         trackingDuration = Mathf.Max(0.0f, trackingDuration - Time.deltaTime);
-
     }
 
     void UpdateHide()
@@ -116,6 +109,7 @@ public class Ghost : MonoBehaviour
         return navHit.position;
     }
 
+
     // Ghost will follow a set path but if it spots player, will chase after them until losing a direct line of sight
     void UpdatePatrol()
     {
@@ -126,8 +120,7 @@ public class Ghost : MonoBehaviour
         else
         {
             if (!agent.pathPending && agent.remainingDistance < 0.5f)
-            {
-      
+            {     
                 GotoNextPoint();
             } 
         }
@@ -141,7 +134,6 @@ public class Ghost : MonoBehaviour
 
         destPoint = (destPoint + 1) % waypoints.Length;
     }
-
     bool CanSeePlayer()
     {
         Vector3 rayPos = transform.position;
@@ -155,17 +147,28 @@ public class Ghost : MonoBehaviour
         return false;
     }
 
-
-
+    // Using the GhostBehaviour class, ghost will chase player using different approaches
     void UpdateHunt()
     {
-        if (!agent.pathPending && agent.remainingDistance < 0.5f || trackingDuration < 0.0f)
+        if (!agent.pathPending || agent.remainingDistance < 0.5f || trackingDuration < 0.0f)
         {
             trackingDuration = 2.5f;
             agent.destination = behaviour.GetTarget();
+        } 
+    }
+
+    // If ghost and player interact while player has normal powerup active, ghost will die and move back to spawn
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Fellow"))
+        {
+            if (player.IsPowerupActive())
+            {
+                ghostState = GhostState.dead;
+                gameObject.layer = LayerMask.NameToLayer("DeadGhost");
+                GetComponent<Renderer>().material = deadMaterial;
+            }
         }
-       
-        
     }
 
     // Called by YellowFellowGame.cs, resets ghost to spawn when player dies
@@ -174,32 +177,6 @@ public class Ghost : MonoBehaviour
         agent.Warp(ghostHouseVector);
     }
 
-    // Called by YellowFellowGame.cs, used to pause and start ghosts depending if game is paused or the game has ended
-    public void SetGhostSpeed(float speed)
-    {
-        agent.speed = speed;
-    }
-
-
-    //----------------------------------------------GHOST INTERACTION-------------------------------------------------//
-
-
-
-    private void OnCollisionEnter(Collision collision)
-    {
-        if (collision.gameObject.CompareTag("Fellow"))
-        {
-            GetComponent<Rigidbody>().isKinematic = true;
-
-            if (player.IsPowerupActive()) ghostDies();
-        }
-    }
-    void ghostDies()
-    {
-        ghostState = GhostState.dead;
-        gameObject.layer = LayerMask.NameToLayer("DeadGhost");
-        GetComponent<Renderer>().material = deadMaterial;
-    }
 }
 
 
