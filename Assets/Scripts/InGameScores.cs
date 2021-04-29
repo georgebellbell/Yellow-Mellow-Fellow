@@ -9,12 +9,10 @@ public class InGameScores : MonoBehaviour
 {
     public string highscoreFile = "level1scores.txt";
     public Text highscore, score;
-    public Fellow playerObject;
-
+    public FellowInteractions playerObject;
 
     int currentHighscore = 0000;
  
-    bool newHighscoreAchieved = false;
     struct HighScoreEntry
     {
         public int score;
@@ -22,7 +20,7 @@ public class InGameScores : MonoBehaviour
     }
 
     List<HighScoreEntry> allScores = new List<HighScoreEntry>();
-    // Start is called before the first frame update
+
     void Start()
     {
         RetrieveHighScores();
@@ -57,7 +55,6 @@ public class InGameScores : MonoBehaviour
         currentHighscore = allScores[0].score;
     }
 
-    // Update is called once per frame
     void Update()
     {
         int currentPlayerScore = playerObject.GetScore();
@@ -73,11 +70,6 @@ public class InGameScores : MonoBehaviour
     {
         int currentPlayerScore = playerObject.GetScore();
 
-       if (currentPlayerScore > currentHighscore)
-        {
-            Debug.Log("YOu beat the highscore!");
-            //different popup or something ingame
-        }
         string playerName = PlayerPrefs.GetString("player"); //get user input
         string line = playerName + " " + currentPlayerScore;
         File.AppendAllText("Highscores/" + highscoreFile, line + Environment.NewLine);

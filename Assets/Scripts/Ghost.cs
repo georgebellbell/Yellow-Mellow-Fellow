@@ -12,10 +12,9 @@ public class Ghost : MonoBehaviour
 
     public Material scaredMaterial;
     public Material deadMaterial;
-    public Material slowMaterial;
     Material normalMaterial;
 
-    Fellow player;
+    FellowInteractions player;
 
     public GameObject GhostHouse;
     Vector3 ghostHouseVector;
@@ -41,7 +40,7 @@ public class Ghost : MonoBehaviour
         agent = GetComponent<NavMeshAgent>();
         g_collider = GetComponent<Collider>();
         gh_collider = GhostHouse.GetComponent<Collider>();
-        player = GameObject.Find("Fellow").GetComponent<Fellow>();
+        player = GameObject.Find("Fellow").GetComponent<FellowInteractions>();
 
         GhostHouse = GameObject.Find("GhostHouse");
         ghostHouseVector = GhostHouse.transform.position;    
@@ -51,8 +50,12 @@ public class Ghost : MonoBehaviour
     {
         // agent is only deactivated when game is paused or ended
         if (!agent.isActiveAndEnabled || game.paused)
+        {
+            agent.isStopped = true;
             return;
-        
+        }
+
+        agent.isStopped = false;
         // if ghost is dead, move towards spawn
         if (ghostState == GhostState.dead)
         {

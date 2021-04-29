@@ -7,11 +7,11 @@ public class GhostBehaviour: MonoBehaviour
 {
     public string ghostType;
     Vector3 target;
-    Fellow player;
+    FellowMovement player;
 
     private void Start()
     {
-        player = GameObject.Find("Fellow").GetComponent<Fellow>();
+        player = GameObject.Find("Fellow").GetComponent<FellowMovement>();
     }
 
     public Vector3 GetTarget()
@@ -28,7 +28,7 @@ public class GhostBehaviour: MonoBehaviour
                 target = Coward(player.transform.position);
                 break;
             case "cyan":
-                    target = Teamplayer(player.transform.position, player.GetDirection());
+                target = Teamplayer(player.transform.position, player.GetDirection());
                 break;
 
         }

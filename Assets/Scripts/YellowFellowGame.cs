@@ -9,7 +9,7 @@ using System;
 public class YellowFellowGame : MonoBehaviour
 {
     //Game Objects
-    public Fellow playerObject;
+    public FellowInteractions playerObject;
     Ghost Red, Orange, Cyan, Pink;
     public GameObject[] collectables;
 
@@ -39,7 +39,6 @@ public class YellowFellowGame : MonoBehaviour
         finalLevel = (currentLevel == SceneManager.sceneCountInBuildSettings - 1);
         birdsEyeCamera.SetActive(true);
         closeUpCamera.SetActive(false);
-
        
         scores = GetComponent<InGameScores>();
         audioSource = GetComponent<AudioSource>();
@@ -95,8 +94,6 @@ public class YellowFellowGame : MonoBehaviour
     void StartGame()
     {
         paused = false;
-        playerObject.Resume();
-        SetGhostSpeed(3.5f);
 
         gameUI.gameObject.SetActive(true);
         winUI.gameObject.SetActive(false);
@@ -130,7 +127,6 @@ public class YellowFellowGame : MonoBehaviour
                 scores.TryToAddScore();
                 playerScoreAdded = true;
             }
-
             if (finalLevel)
                 StartFinalWin();
             else
@@ -143,14 +139,7 @@ public class YellowFellowGame : MonoBehaviour
             StartLose();
         }
 
-        if (playerObject.IsTimeslowActive())
-        {
-            SlowMoUI.SetActive(true);
-        }
-        else
-        {
-            SlowMoUI.SetActive(false);
-        }
+        SlowMoUI.SetActive(playerObject.IsTimeslowActive());
 
         if (Input.GetKeyDown(KeyCode.Escape))
         {
@@ -160,13 +149,10 @@ public class YellowFellowGame : MonoBehaviour
             {
                 Debug.Log("GamePaused");
                 StartPause();
-            }
-                
+            }     
             else
-                StartGame();
-            
+                StartGame(); 
         }
-        
     }
 
     void StartFinalWin()
@@ -188,9 +174,9 @@ public class YellowFellowGame : MonoBehaviour
 
     void GameEnd()
     {
+        paused = true;
         gameEnded = true;
-        SetGhostSpeed(0f);
-        playerObject.Pause();
+        //playerObject.Pause();
     }
 
     void StartWin()
@@ -211,18 +197,8 @@ public class YellowFellowGame : MonoBehaviour
 
     void StartPause()
     {
-        playerObject.Pause();
-        SetGhostSpeed(0f);
         pausedUI.SetActive(true);
         pausing.SetTrigger("Pause");
-    }
-
-    void SetGhostSpeed(float speed)
-    {
-        Red.SetGhostSpeed(speed);
-        Cyan.SetGhostSpeed(speed);
-        Orange.SetGhostSpeed(speed);
-        Pink.SetGhostSpeed(speed);
     }
 
     // BUTTONS

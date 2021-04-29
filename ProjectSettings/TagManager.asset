@@ -9,13 +9,12 @@ TagManager:
   - Ghost
   - Fellow
   - Powerup
-  - LeftTeleporter
-  - RightTeleporter
   - GhostHouse
   - waypoint
   - Timeslow
   - DoubleScore
   - ExtraLife
+  - Teleporter
   layers:
   - Default
   - TransparentFX

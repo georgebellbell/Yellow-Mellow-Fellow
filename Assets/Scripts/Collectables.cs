@@ -2,28 +2,30 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Pellet : MonoBehaviour
+public class Collectables : MonoBehaviour
 {
-
-    Fellow fellow;
     public Material doubleScoreMat;
     Material defaultMat;
+
+    FellowInteractions fellow;
     Renderer renderer;
 
     void Start()
     {
-        if (!CompareTag("Pellet"))
-            return;
-        fellow = GameObject.Find("Fellow").GetComponent<Fellow>();
+        // if the collectable isn't a pellet, nothing will be done
+        if (!CompareTag("Pellet")) return;
+
+        fellow = GameObject.Find("Fellow").GetComponent<FellowInteractions>();
         renderer = GetComponent<Renderer>();
         defaultMat = renderer.material;
     }
 
     void Update()
     {
-        if (!CompareTag("Pellet"))
-            return;
+        // if the collectable isn't a pellet, nothing will be done
+        if (!CompareTag("Pellet")) return;
 
+        // if player has the DoubleScorePowerup active, change the item colour
         if (fellow.IsDoublePointsActive())
         {
             renderer.material = doubleScoreMat;
