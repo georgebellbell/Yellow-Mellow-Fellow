@@ -16,8 +16,6 @@ public class FellowInteractions : MonoBehaviour
 
     public Material[] allParticles;
 
-    public YellowFellowGame game;
-
     int pointsPerPellet = 100;
     int pointsPerPowerup = 250;
     int pointsPerGhost = 500;

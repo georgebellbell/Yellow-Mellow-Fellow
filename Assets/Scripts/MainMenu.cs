@@ -113,6 +113,7 @@ public class MainMenu : MonoBehaviour
         levels[currentLevelShown].SetActive(true);
     }
 
+    
     public void QuitButton()
     {
         Application.Quit();
