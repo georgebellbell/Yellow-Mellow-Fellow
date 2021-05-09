@@ -47,7 +47,7 @@ public class Ghost : MonoBehaviour
 
     void Update()
     {
-        // agent is only deactivated when game is paused or ended
+        // agent is only deactivated when game is paused or has ended
         if (game.paused) 
         { 
             agent.isStopped = true;
@@ -80,7 +80,7 @@ public class Ghost : MonoBehaviour
         ghostState = GhostState.normal;
         GetComponent<Renderer>().material = normalMaterial;
 
-        //Wave based movement so the ghosts will alternate between partolling a set path and following the player
+        //Wave based movement so the ghosts will alternate between patrolling a set path and following the player
         if (Time.time <= 7 || Time.time > 27 && Time.time <= 34 ||Time.time > 54 && Time.time <= 59 || Time.time > 79 && Time.time <= 84)
             UpdatePatrol();
         else
@@ -89,6 +89,7 @@ public class Ghost : MonoBehaviour
         trackingDuration = Mathf.Max(0.0f, trackingDuration - Time.deltaTime);
     }
 
+    // ghost will move away from the player
     void UpdateHide()
     {
         if (ghostState != GhostState.hide || agent.remainingDistance < 1f)
@@ -99,6 +100,7 @@ public class Ghost : MonoBehaviour
         }
         
     }
+    // determines current direction to player and moves away from them
     Vector3 PickHidingPlace()
     {
         Vector3 directionToPlayer = (player.transform.position - transform.position).normalized;
@@ -125,6 +127,7 @@ public class Ghost : MonoBehaviour
             } 
         }
     }
+    // navmeshagent cycles through waypoints in patrol path (determined in YellowFellowGame), targeting next one when they get close to current one
     void GotoNextPoint()
     {
         // Returns if no points have been set up
@@ -134,6 +137,7 @@ public class Ghost : MonoBehaviour
 
         destPoint = (destPoint + 1) % waypoints.Length;
     }
+    // uses raycasting to determine if ghost has direct line of sight with player
     bool CanSeePlayer()
     {
         Vector3 rayPos = transform.position;
@@ -150,6 +154,7 @@ public class Ghost : MonoBehaviour
     // Using the GhostBehaviour class, ghost will chase player using different approaches
     void UpdateHunt()
     {
+        // Picks new postion if there is no path, is close to destination or they have been following a path for too long
         if (!agent.pathPending || agent.remainingDistance < 0.5f || trackingDuration < 0.0f)
         {
             trackingDuration = 2.5f;

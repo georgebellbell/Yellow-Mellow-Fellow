@@ -4,7 +4,6 @@ using UnityEngine;
 using System.Linq;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
-using System;
 
 public class YellowFellowGame : MonoBehaviour
 {
@@ -27,25 +26,41 @@ public class YellowFellowGame : MonoBehaviour
     public GameObject birdsEyeCamera;
     public GameObject closeUpCamera;
    
-    bool playerScoreAdded = false;
     public bool paused = false;
     bool gameEnded = false;
     bool finalLevel = false;
    
     void Start()
     {
+        scores = GetComponent<InGameScores>();
+        audioSource = GetComponent<AudioSource>();
+
         currentLevel = SceneManager.GetActiveScene().buildIndex;
-   
+        level.text = "LEVEL: " + currentLevel;
+        //determine if current level is last one
         finalLevel = (currentLevel == SceneManager.sceneCountInBuildSettings - 1);
+
         birdsEyeCamera.SetActive(true);
         closeUpCamera.SetActive(false);
        
-        scores = GetComponent<InGameScores>();
-        audioSource = GetComponent<AudioSource>();
-        SetGhostPaths();
-        level.text = "LEVEL: " + currentLevel;
+        //All collectables are found
         collectables = FindGameObjectsWithTags(new string[] { "Pellet", "Powerup", "Timeslow", "DoubleScore", "ExtraLife" });
+        SetGhostPaths();
         StartGame();
+    }
+
+    //finds all objects with the specified tags
+    GameObject[] FindGameObjectsWithTags(string[] tags)
+    {
+        var all = new List<GameObject>();
+
+        foreach (string tag in tags)
+        {
+            var temp = GameObject.FindGameObjectsWithTag(tag).ToList();
+            all = all.Concat(temp).ToList();
+
+        }
+        return all.ToArray();
     }
 
     // When level loads, ghosts are found and their patrol paths are set
@@ -76,21 +91,8 @@ public class YellowFellowGame : MonoBehaviour
         }
         return allNodes.ToArray();
     }
-
-    //function got from this link: https://answers.unity.com/questions/973677/add-gameobjects-with-different-tags-to-one-array.html on 26/03/2021
-    GameObject[] FindGameObjectsWithTags(string[] tags)
-    {
-        var all = new List<GameObject>();
-
-        foreach (string tag in tags)
-        {
-            var temp = GameObject.FindGameObjectsWithTag(tag).ToList();
-            all = all.Concat(temp).ToList();
-
-        }
-        return all.ToArray();
-    }
-
+    
+    // Called when game first starts or when unpaused
     void StartGame()
     {
         paused = false;
@@ -104,29 +106,25 @@ public class YellowFellowGame : MonoBehaviour
 
     void Update()
     {
+        // If game has ended, don't do anything else
         if (gameEnded)
             return;
 
-
         lives.text = "" + playerObject.GetLives();
 
-        // if player is dead, and has lives left, respawn them and reset ghosts
+        // if player is dead, and has lives left, respawn player and reset ghosts
         if (!playerObject.isActiveAndEnabled && playerObject.GetLives() > 0)
         {
             ResetGame();
         }
         
         // if all the collectables have been eaten, the player wins
-        if (playerObject.PelletsEaten() == collectables.Length)
+        if (playerObject.PelletsEaten() == collectables.Length ||Input.GetKeyDown(KeyCode.P))
         {
             GameEnd();
 
-            // if score hasnt been added, add it
-            if (!playerScoreAdded)
-            {
-                scores.TryToAddScore();
-                playerScoreAdded = true;
-            }
+            scores.AddPlayerScore();   
+           
             if (finalLevel)
                 StartFinalWin();
             else
@@ -139,30 +137,22 @@ public class YellowFellowGame : MonoBehaviour
             StartLose();
         }
 
+        //if the Timeslow powerup is active, grey overlay will appear
         SlowMoUI.SetActive(playerObject.IsTimeslowActive());
 
+        //pausing game
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             paused = !paused;
 
             if (paused)
-            {
-                Debug.Log("GamePaused");
-                StartPause();
-            }     
+                StartPause(); 
             else
                 StartGame(); 
         }
     }
 
-    void StartFinalWin()
-    {
-        if (!audioSource.isPlaying)
-            audioSource.PlayOneShot(allLevelsComplete);
-
-        finalWinUI.gameObject.SetActive(true);
-    }
-
+    //resets both player and ghosts back to spawn point
     void ResetGame()
     {
         Red.toSpawn();
@@ -171,14 +161,24 @@ public class YellowFellowGame : MonoBehaviour
         Cyan.toSpawn();
         playerObject.respawn();
     }
-
+    
+    //when game has ended, nothing further will happen in game
     void GameEnd()
     {
         paused = true;
         gameEnded = true;
-        //playerObject.Pause();
     }
 
+    // if last level when game won, final win UI appears
+    void StartFinalWin()
+    {
+        if (!audioSource.isPlaying)
+            audioSource.PlayOneShot(allLevelsComplete);
+
+        finalWinUI.gameObject.SetActive(true);
+    }
+
+    // otherwise the normal win UI will appear
     void StartWin()
     {
         if (!audioSource.isPlaying)
@@ -187,6 +187,7 @@ public class YellowFellowGame : MonoBehaviour
         winUI.gameObject.SetActive(true);
     }
    
+    // if player loses, lose UI will appear
     void StartLose()
     {
         if (!audioSource.isPlaying)
@@ -195,6 +196,7 @@ public class YellowFellowGame : MonoBehaviour
         loseUI.gameObject.SetActive(true);
     }
 
+    // when escape is pressed, paused Ui will appear through an animation
     void StartPause()
     {
         pausedUI.SetActive(true);
@@ -203,11 +205,13 @@ public class YellowFellowGame : MonoBehaviour
 
     // BUTTONS
 
+    // resumes game from paused menu
     public void ResumeGameButton()
     {
         StartGame();
     }
 
+    // switches camera to follow camera
     public void ChangeCameraButton()
     {
         birdsEyeCamera.SetActive(!birdsEyeCamera.activeSelf);
@@ -221,27 +225,33 @@ public class YellowFellowGame : MonoBehaviour
             buttonText.text = "Player Camera";
 
     }
+
+    // reloads the current game level scene
     public void RestartLevelButton()
     {
         StartCoroutine(LoadLevel(currentLevel));
     }
 
+    // loads the main menu scene
     public void QuitButton()
     {
         StartCoroutine(LoadLevel(0));
     }
 
+    // from either win UI, can progress to next level scene
     public void StartNextLevelButton()
     {
         int nextLevel = (currentLevel + 1) % SceneManager.sceneCountInBuildSettings;
         StartCoroutine(LoadLevel(nextLevel));
     }
 
+    // from final win UI, you can restart from level 1 scene
     public void StartLevelOne()
     {
         StartCoroutine(LoadLevel(1));
     }
-   
+
+    // coroutine to start transition animation and load new scene
     IEnumerator LoadLevel(int levelIndex)
     {
         transition.SetTrigger("Start");
@@ -251,8 +261,4 @@ public class YellowFellowGame : MonoBehaviour
         SceneManager.LoadScene(levelIndex);
 
     }
-
-
-
-
 }

@@ -11,20 +11,21 @@ public class FellowMovement : MonoBehaviour
     public AudioClip moveSound;
     public AudioSource moveAudioSource;
 
-    public float speed;
+    public float currentSpeed;
     public float defaultSpeed = 6f;
 
     void Start()
     {
-        speed = defaultSpeed;
+        currentSpeed = defaultSpeed;
     }
     
+    // player will move in one of four directions via the WASD keys
     void FixedUpdate()
     {
         // If game is paused via YellowFellowGame.cs, player won't move
         if (game.paused)
         {
-            speed = 0;
+            currentSpeed = 0;
             return;
         }
 
@@ -33,37 +34,38 @@ public class FellowMovement : MonoBehaviour
 
         if (Input.GetKey(KeyCode.A))
         {
-            velocity.x = -speed;
+            velocity.x = -currentSpeed;
             playerDirection = "left";
             PlayMovementSound();
         }
         if (Input.GetKey(KeyCode.D))
         {
-            velocity.x = speed;
+            velocity.x = currentSpeed;
             playerDirection = "right";
             PlayMovementSound();
         }
         if (Input.GetKey(KeyCode.W))
         {
-            velocity.z = speed;
+            velocity.z = currentSpeed;
             playerDirection = "up";
             PlayMovementSound();
         }
         if (Input.GetKey(KeyCode.S))
         {
-            velocity.z = -speed;
+            velocity.z = -currentSpeed;
             playerDirection = "down";
             PlayMovementSound();
         }
         b.velocity = velocity;
     }
-
+    // when player is moving, sound will play
     private void PlayMovementSound()
     {
         if (!moveAudioSource.isPlaying)
             moveAudioSource.PlayOneShot(moveSound);
     }
 
+    // for the ghosts target methods, they use the current direction of player
     public string GetDirection()
     {
         return playerDirection;

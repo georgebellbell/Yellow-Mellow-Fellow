@@ -35,6 +35,7 @@ public class Collectables : MonoBehaviour
         itemRenderer.material = defaultMat;
     }
 
+    // when player interacts with this object, it will disappear
     private void OnTriggerEnter(Collider other)
     {
         gameObject.SetActive(false);

@@ -8,7 +8,7 @@ public class FellowInteractions : MonoBehaviour
 
     public Animator deathAnimation;
 
-    public ParticleSystem PlayerParticleSystem;
+    ParticleSystem PlayerParticleSystem;
 
     Material currentPelletParticle;
     Material currentPowerUpParticle;
@@ -39,24 +39,25 @@ public class FellowInteractions : MonoBehaviour
 
     void Start()
     {
+        PlayerParticleSystem = GetComponent<ParticleSystem>();
         CheckDoubleScorePowerup();
         spawnLocation = gameObject.transform.position;
     }
 
-    // Movement and monitors time left on powerups
     private void FixedUpdate()
     {
         ReducePowerupTime();
        
         CheckDoubleScorePowerup();
      
+        // if timeslow powerup is no longer active, player speed returns to normal
         if (!IsTimeslowActive())
         {
-            GetComponent<FellowMovement>().speed = GetComponent<FellowMovement>().defaultSpeed;
+            GetComponent<FellowMovement>().currentSpeed = GetComponent<FellowMovement>().defaultSpeed;
         }
     }
 
-    // reduces powerup time
+    // reduces time of all powerups
     private void ReducePowerupTime()
     {
         eatGhostsPowerupTime = Mathf.Max(0.0f, eatGhostsPowerupTime - Time.fixedDeltaTime);
@@ -64,7 +65,7 @@ public class FellowInteractions : MonoBehaviour
         doubleScorePowerupTime = Mathf.Max(0.0f, doubleScorePowerupTime - Time.fixedDeltaTime);
     }
 
-    // depending on if DoubleScorePowerup is active, certain particles emmitted will change
+    // depending on if DoubleScorePowerup is active, the certain particles emmitted will change as will score recieved
     void CheckDoubleScorePowerup()
     {
         if (IsDoublePointsActive())
@@ -81,7 +82,6 @@ public class FellowInteractions : MonoBehaviour
             currentPowerUpParticle = allParticles[1];
             currentEatGhostParticle = allParticles[2];
         }
-
     }
 
 
@@ -142,7 +142,7 @@ public class FellowInteractions : MonoBehaviour
 
         collectablesEaten++;
 
-        GetComponent<FellowMovement>().speed = GetComponent<FellowMovement>().speed / 2;
+        GetComponent<FellowMovement>().currentSpeed = GetComponent<FellowMovement>().currentSpeed / 2;
         timeSlowPowerupTime = timeSlowDuration;
     }
     void EatDoubleScorePowerup()
@@ -196,6 +196,7 @@ public class FellowInteractions : MonoBehaviour
         }
     }
 
+    // Coroutine for when the player dies
     IEnumerator PlayerDies()
     {
         // player set to same layer of ghost, to prevent player losing anymore lives during death and eat any more collectables
@@ -229,32 +230,37 @@ public class FellowInteractions : MonoBehaviour
 
     // ---------------------------------- GETTERS AND SETTERS -------------------------------------------------------
 
-
+    // checks if normal powerup for eating ghosts is active
     public bool IsPowerupActive()
     {
         return eatGhostsPowerupTime > 0.0f;
     }
 
+    // checks if the double points powerup is active
     public bool IsDoublePointsActive()
     {
         return doubleScorePowerupTime > 0.0f;
     }
 
+    // checks if the time slow poerup is active
     public bool IsTimeslowActive()
     {
         return timeSlowPowerupTime > 0.0f;
     }
 
+    // Called by YellowFellowGame to check how many pellets have been eaten, if equal to total number, game is won
     public int PelletsEaten()
     {
         return collectablesEaten;
     }
 
+    // Called by InGameScores to update score visually and output score to file
     public int GetScore()
     {
         return score;
     }
-    
+
+    // Called by YellowFellowGame to update lives visuallt and check if player has lost
     public int GetLives()
     {
         return lives;

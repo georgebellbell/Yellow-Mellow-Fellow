@@ -3,7 +3,9 @@ using UnityEngine.AI;
 
 public class GhostBehaviour: MonoBehaviour
 {
+    //determines what method the ghost will hunt with
     public string ghostType;
+
     Vector3 target;
     FellowMovement player;
 
@@ -12,6 +14,7 @@ public class GhostBehaviour: MonoBehaviour
         player = GameObject.Find("Fellow").GetComponent<FellowMovement>();
     }
 
+    // called by main Ghost class when ghost is hunting the player
     public Vector3 GetTarget()
     {
         switch (ghostType)
@@ -33,6 +36,7 @@ public class GhostBehaviour: MonoBehaviour
         return target;
     }
 
+    // finds a target ahead of player by using the players current direction
     Vector3 PinkGhost(Vector3 playerPosition,string playerDirection)
     {
         target = playerPosition;
@@ -44,10 +48,10 @@ public class GhostBehaviour: MonoBehaviour
             case "up": target.z = target.z + 2; break;
             case "down": target.z = target.z - 2; break;
         }
-
         return target;
     }
 
+    // acts like red ghost until within certain distance, otherwise in a random direction
     Vector3 OrangeGhost(Vector3 playerPosition)
     {
         //if more than 4 units away will move straight for player
@@ -77,11 +81,13 @@ public class GhostBehaviour: MonoBehaviour
         target.x = target.x + ((stalkerLocation.x - playerPosition.x) * 0.5f);
         target.z = target.z + ((stalkerLocation.z - playerPosition.z) * 0.5f);
 
+        //point determined by vector is used to sample navmesh for a valid target
         NavMeshHit navHit;
         NavMesh.SamplePosition(target, out navHit, 8.0f, NavMesh.AllAreas);
         return navHit.position;
     }
 
+    // selects a random position that is on the navmesh
     public Vector3 PickRandomPosition()
     {
         Vector3 destination = transform.position;

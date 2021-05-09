@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class HighScoreTable : MonoBehaviour
 {
     public string highscoreFile = "level1scores.txt";
-    [SerializeField] Font scoreFont;
+    public Font scoreFont;
 
     List<HighScoreEntry> allScores = new List<HighScoreEntry>();
 
@@ -27,6 +27,7 @@ public class HighScoreTable : MonoBehaviour
         }
     }
 
+    // reads file, breaking values into name and score as entries to be sorted
     public void LoadHighScoreTable()
     {
         using (TextReader file = File.OpenText("Highscores/" + highscoreFile))
@@ -44,16 +45,17 @@ public class HighScoreTable : MonoBehaviour
         }
     }
 
+    // orders all sscores in file in decending order
     public void SortHighScoreEntries()
     {
         allScores.Sort((x, y) => y.score.CompareTo(x.score));
     }
 
+    // will output only the top ten scores, but if less than ten, all the scores in file
     void CreateHighScoreText()
     {
         int scoresToOutput = 10;
-
-        // will output only the top ten scores, but if less than ten, all the scores in file
+        
         if (allScores.Count < 10)
             scoresToOutput = allScores.Count;
 
@@ -76,7 +78,5 @@ public class HighScoreTable : MonoBehaviour
             o.GetComponent<RectTransform>().sizeDelta = new Vector2(400, 100);
         }
 
-    }
-
-    
+    }  
 }

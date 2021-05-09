@@ -15,6 +15,8 @@ public class Teleporters : MonoBehaviour
     {
         audioSource = GetComponent<AudioSource>();
     }
+
+    // when player or ghost moves through teleporter, they move to other teleporter with a sound effect
     private void OnTriggerEnter(Collider other)
     {
         if (transform.position.x < otherTeleporter.position.x)
@@ -25,10 +27,9 @@ public class Teleporters : MonoBehaviour
         {
             offset = +1;
         }
+
         Vector3 destination = otherTeleporter.position;
         destination.x = destination.x + offset;
-
-        
 
         if (other.CompareTag("Fellow"))
         {
@@ -38,10 +39,9 @@ public class Teleporters : MonoBehaviour
         else if (other.CompareTag("Ghost"))
         {
             audioSource.PlayOneShot(teleportSound);
+            // teleporting is done using the ghosts navmeshagent
             NavMeshAgent agent = other.GetComponent<NavMeshAgent>();
             agent.Warp(destination);
-        }
-        
-        
+        } 
     }
 }

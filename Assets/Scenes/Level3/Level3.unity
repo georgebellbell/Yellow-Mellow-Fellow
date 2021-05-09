@@ -4029,22 +4029,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1193820443, guid: e6d929641d81d5a44978513c12018d82, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2076728842464277872, guid: e6d929641d81d5a44978513c12018d82, type: 3}
       propertyPath: m_Follow
       value: 
       objectReference: {fileID: 2351069128001688493}
-    - target: {fileID: 2076728842464277873, guid: e6d929641d81d5a44978513c12018d82, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: -4.0454884
-      objectReference: {fileID: 0}
-    - target: {fileID: 2076728842464277873, guid: e6d929641d81d5a44978513c12018d82, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 1.500001
-      objectReference: {fileID: 0}
-    - target: {fileID: 2076728842464277873, guid: e6d929641d81d5a44978513c12018d82, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -0.09373379
-      objectReference: {fileID: 0}
     - target: {fileID: 2076728842804055861, guid: e6d929641d81d5a44978513c12018d82, type: 3}
       propertyPath: m_Name
       value: Cameras
@@ -4092,18 +4084,6 @@ PrefabInstance:
     - target: {fileID: 2076728842804055866, guid: e6d929641d81d5a44978513c12018d82, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2076728843904460513, guid: e6d929641d81d5a44978513c12018d82, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: -4.0454884
-      objectReference: {fileID: 0}
-    - target: {fileID: 2076728843904460513, guid: e6d929641d81d5a44978513c12018d82, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 1.500001
-      objectReference: {fileID: 0}
-    - target: {fileID: 2076728843904460513, guid: e6d929641d81d5a44978513c12018d82, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -0.09373379
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e6d929641d81d5a44978513c12018d82, type: 3}
@@ -14153,7 +14133,7 @@ PrefabInstance:
       objectReference: {fileID: 2024867684}
     - target: {fileID: 6622678435264063018, guid: 2befa01436890f04e8183b7391bff16e, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8794163422187925538, guid: 2befa01436890f04e8183b7391bff16e, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target

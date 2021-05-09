@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
@@ -12,6 +11,7 @@ public class InGameScores : MonoBehaviour
     public FellowInteractions playerObject;
 
     int currentHighscore = 0000;
+    int currentPlayerScore = 0000;
  
     struct HighScoreEntry
     {
@@ -23,15 +23,12 @@ public class InGameScores : MonoBehaviour
 
     void Start()
     {
-        RetrieveHighScores();
-
-        SortHighScores();
+        RetrieveTopScore();
         highscore.text = "" + currentHighscore;
-
     }
 
-   
-    private void RetrieveHighScores()
+    // respective score file is found, sorted and top score retrieved
+    void RetrieveTopScore()
     {
         using (TextReader file = File.OpenText("Highscores/" + highscoreFile))
         {
@@ -45,9 +42,7 @@ public class InGameScores : MonoBehaviour
                 allScores.Add(entry);
             }
         }
-    }
-    private void SortHighScores()
-    {
+
         if (allScores.Count == 0)
             return;
 
@@ -57,21 +52,24 @@ public class InGameScores : MonoBehaviour
 
     void Update()
     {
-        int currentPlayerScore = playerObject.GetScore();
+        currentPlayerScore = playerObject.GetScore();
 
         score.text = "" + currentPlayerScore;
+        // if player score exceeds current highscore, as game progresses both score values in UI will increase
         if (currentPlayerScore > currentHighscore)
         {
             highscore.text = "" + currentPlayerScore;
         }
     }
 
-    public void TryToAddScore()
+    // Called by YellowFellowGame when player beats a level
+    public void AddPlayerScore()
     {
-        int currentPlayerScore = playerObject.GetScore();
+        currentPlayerScore = playerObject.GetScore();
 
-        string playerName = PlayerPrefs.GetString("player"); //get user input
+        string playerName = PlayerPrefs.GetString("player");
         string line = playerName + " " + currentPlayerScore;
         File.AppendAllText("Highscores/" + highscoreFile, line + Environment.NewLine);
+
     }
 }

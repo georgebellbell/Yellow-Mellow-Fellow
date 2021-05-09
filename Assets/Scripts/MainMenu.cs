@@ -29,7 +29,7 @@ public class MainMenu : MonoBehaviour
         StartMainMenu();
     }
 
-
+    // when button is pressed, checks input box for valid name and if so, game is started, otherwise error message appears
     public void PlayGameButton()
     {
         if (CheckValidName())
@@ -44,6 +44,7 @@ public class MainMenu : MonoBehaviour
         }
     }
 
+    // checks player name given is between 3 and 15 characters and has no spaces. If it has an error, popup error text is set and returns false
     private bool CheckValidName()
     {
         string playerName = nameInput.text;
@@ -63,17 +64,17 @@ public class MainMenu : MonoBehaviour
         }
         return false;
     }
-
+    // first level scene is loaded
     void StartGame()
     {
-        Debug.Log("Starting Game!");
         SceneManager.LoadScene(1);
     }
 
+    // moves player from high scores to menu, resetting the error message at same time
     public void MainMenuButton()
     {
         audioSource.PlayOneShot(menuSelection);
-        Invoke(nameof(StartMainMenu), 0.5f);
+        StartMainMenu();
     }
     public void StartMainMenu()
     {
@@ -83,25 +84,23 @@ public class MainMenu : MonoBehaviour
         popup.SetActive(false);
     }
 
+    // moves player from main menu to the highscores
     public void HighScoresButton()
     {
         audioSource.PlayOneShot(menuSelection);
-        Invoke(nameof(StartHighScores), 0.5f);
-    }
-    void StartHighScores()
-    {
         levels[currentLevelShown].SetActive(true);
         mainMenu.SetActive(false);
         highScores.SetActive(true);
     }
-
+    
+    // cycles right through the level scores
     public void MoveRightThroughScores()
     {
         levels[currentLevelShown].SetActive(false);
         currentLevelShown = (currentLevelShown + 1) % numberOfLevels;
         levels[currentLevelShown].SetActive(true);
     }
-
+    // cycles left through the level scores
     public void MoveLeftThroughScores()
     {
         levels[currentLevelShown].SetActive(false);
@@ -113,7 +112,6 @@ public class MainMenu : MonoBehaviour
         levels[currentLevelShown].SetActive(true);
     }
 
-    
     public void QuitButton()
     {
         Application.Quit();
