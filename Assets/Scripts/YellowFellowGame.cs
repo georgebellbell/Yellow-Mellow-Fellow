@@ -119,7 +119,7 @@ public class YellowFellowGame : MonoBehaviour
         }
         
         // if all the collectables have been eaten, the player wins
-        if (playerObject.PelletsEaten() == collectables.Length ||Input.GetKeyDown(KeyCode.P))
+        if (playerObject.PelletsEaten() == collectables.Length)
         {
             GameEnd();
 

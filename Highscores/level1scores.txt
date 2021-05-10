@@ -8,5 +8,4 @@ Izzie 7500
 Chris 8000
 Ash 8600
 Dan -1
-www 100
-BENNY 900
+
